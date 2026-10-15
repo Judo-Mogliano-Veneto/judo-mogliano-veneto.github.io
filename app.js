@@ -1,58 +1,242 @@
-/* Costruisce la pagina da content.js ed exercises.js. Non serve modificarlo per cambiare i contenuti. */
+/* Navigazione e schermate. I contenuti stanno nei file dati: content.js, teoria.js, cinture.js, glossario.js, lezione.js, dojo.js. */
 (function () {
-  const C = window.CONTENT, EX = window.EXERCISES, root = document.getElementById("app");
-  const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-  const store = {
-    get(k) { try { return localStorage.getItem("guida:" + k); } catch (e) { return null; } },
-    set(k, v) { try { localStorage.setItem("guida:" + k, v); } catch (e) { /* storage non disponibile */ } }
-  };
+  const { esc, rich, store, norm, block, wire, chip } = window.R;
+  const C = window.CONTENT, T = window.TEORIA, B = window.CINTURE, G = window.GLOSSARIO, D = window.DOJO, L = window.LEZIONE;
+  const app = document.getElementById("app");
 
-  const table = (head, rows) => `<div class="tbl"><table><thead><tr>${head.map(h => `<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${rows.map(r => `<tr>${r.map((c, i) => `<td${i === 0 && /^\d+$/.test(c) ? ' class="n"' : ""}>${esc(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+  const MESI = ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre"];
+  const GIORNI = ["domenica", "lunedì", "martedì", "mercoledì", "giovedì", "venerdì", "sabato"];
+  const pad = n => String(n).padStart(2, "0");
+  const iso = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  const fmt = s => { const [y, m, d] = s.split("-").map(Number); return `${d} ${MESI[m - 1]} ${y}`; };
 
-  const card = (ex, i) => {
-    let fig = "";
-    try { fig = window.Fig.figure(ex); } catch (e) { console.warn(ex.name, e); }
-    return `<article class="card"><div class="fig">${fig}</div>
-      <div class="top"><h3>${ex.pair ? `<span class="pair">${esc(ex.pair)}</span>` : `<span class="num">${i + 1}</span>`}${esc(ex.name)}</h3><span class="dose">${esc(ex.dose)}</span></div>
-      ${ex.load ? `<div class="load">${esc(ex.load)}</div>` : ""}
-      <ul>${ex.cues.map(c => `<li>${esc(c)}</li>`).join("")}</ul></article>`;
-  };
+  const json = (k, fallback) => { try { return JSON.parse(store.get(k)) || fallback; } catch (e) { return fallback; } };
 
-  const block = b => {
-    switch (b.type) {
-      case "text": return `<p>${esc(b.text)}</p>`;
-      case "table": return table(b.head, b.rows);
-      case "timeline": return `<div class="timeline">${b.items.map(t => `<div class="${esc(t.style || "")}"><span>${esc(t.time)}</span><b>${esc(t.title)}</b>${esc(t.text)}</div>`).join("")}</div>`;
-      case "exercises": return `<div class="grid">${(EX[b.group] || []).map(card).join("")}</div>`;
-      case "list": return `<div class="card"><ul>${b.items.map(i => `<li>${esc(i)}</li>`).join("")}</ul></div>`;
-      case "note": return `<div class="note"><b>${esc(b.title)}</b>${b.text ? `<p>${esc(b.text)}</p>` : ""}<ul class="checks">${(b.checks || []).map((c, i) => `<li><label><input type="checkbox" data-key="note:${esc(b.title)}:${i}"> ${esc(c)}</label></li>`).join("")}</ul></div>`;
-      case "progress": return `<div class="tbl"><table><thead><tr>${b.head.map(h => `<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${b.rows.map(r => `<tr><td class="n">${esc(r.week)}</td><td class="days">${r.dates.map((d, i) => `<button type="button" class="day" aria-pressed="false" data-key="done:${esc(r.week)}:${i}">${esc(d)}</button>`).join("")}</td><td>${esc(r.load)}</td><td>${esc(r.rhythm)}</td></tr>`).join("")}</tbody></table></div>`;
-      case "tests": return `<div class="note"><b>${esc(b.title)}</b><p>${esc(b.text)}</p><div class="tests"><span></span><span class="h">Sett. 1</span><span class="h">Sett. 6</span>${b.items.map((t, i) => `<label for="t${i}a">${esc(t)}</label><input id="t${i}a" inputmode="decimal" data-key="test:${i}:1" aria-label="${esc(t)}, settimana 1"><input id="t${i}b" inputmode="decimal" data-key="test:${i}:6" aria-label="${esc(t)}, settimana 6">`).join("")}</div></div>`;
-      default: return "";
+  const head = (eyebrow, title, lead, back) => `<header>${back ? `<a class="back" href="${esc(back[0])}">‹ ${esc(back[1])}</a>` : ""}${eyebrow ? `<div class="eyebrow">${esc(eyebrow)}</div>` : ""}<h1>${esc(title)}</h1>${lead ? `<p class="lead">${rich(lead)}</p>` : ""}</header>`;
+  const tiles = items => `<div class="menu">${items.map(i => `<a class="tile${i.cls ? " " + i.cls : ""}" href="${esc(i.href)}">${i.badge ? `<em>${esc(i.badge)}</em>` : ""}<b>${esc(i.label)}</b>${i.text ? `<span>${esc(i.text)}</span>` : ""}</a>`).join("")}</div>`;
+  const beltDot = b => `<i class="dot${b.bordo ? " edge" : ""}" style="background:${b.colore}"></i>`;
+
+  /* ---------- Home ---------- */
+  const START = new Date(2026, 9, 12), END = new Date(2026, 10, 18);
+  function nextSession() {
+    const now = new Date(); now.setHours(0, 0, 0, 0);
+    for (let i = 0; i < 8; i++) {
+      const d = new Date(now); d.setDate(now.getDate() + i);
+      if (D.mieiGiorni.includes(d.getDay())) return { d, i };
     }
-  };
-
-  document.title = C.title;
-  root.innerHTML = `
-    <header><div class="eyebrow">${esc(C.eyebrow)}</div><h1>${esc(C.title)}</h1><p class="lead">${esc(C.lead)}</p>
-      <div class="legend">${C.legend.map(l => `<span>${l.color ? `<i style="background:${l.color}"></i>` : ""}${esc(l.text)}</span>`).join("")}</div></header>
-    <nav aria-label="Sezioni"><ul>${C.sections.map(s => `<li><a href="#${esc(s.id)}">${esc(s.nav)}</a></li>`).join("")}</ul></nav>
-    ${C.sections.map(s => `<section id="${esc(s.id)}"><div class="sec-head"><h2>${s.tag ? `<span class="tag">${esc(s.tag)}</span>` : ""}${esc(s.title)}</h2>${s.intro ? `<p>${esc(s.intro)}</p>` : ""}</div>${s.blocks.map(block).join("")}</section>`).join("")}`;
-
-  // stato salvato sul telefono: sedute fatte, test, promemoria
-  root.querySelectorAll("[data-key]").forEach(el => {
-    const k = el.dataset.key, v = store.get(k);
-    if (el.tagName === "BUTTON") {
-      if (v === "1") { el.classList.add("on"); el.setAttribute("aria-pressed", "true"); }
-      el.addEventListener("click", () => { const on = el.classList.toggle("on"); el.setAttribute("aria-pressed", on); store.set(k, on ? "1" : "0"); });
-    } else if (el.type === "checkbox") {
-      el.checked = v === "1";
-      el.addEventListener("change", () => store.set(k, el.checked ? "1" : "0"));
-    } else {
-      if (v !== null) el.value = v;
-      el.addEventListener("input", () => store.set(k, el.value));
+    return null;
+  }
+  function programmaDel(d) {
+    if (d < START || d > END) return null;
+    const week = Math.floor((d - START) / 864e5 / 7) + 1;
+    const prog = C.sections.find(s => s.id === "progressione").blocks.find(b => b.type === "progress");
+    const row = prog.rows[week - 1];
+    return { week, load: row.load, seduta: d.getDay() === 1 ? "A" : "B" };
+  }
+  function home() {
+    const ns = nextSession();
+    let next = "";
+    if (ns) {
+      const when = ns.i === 0 ? "Oggi" : ns.i === 1 ? "Domani" : GIORNI[ns.d.getDay()][0].toUpperCase() + GIORNI[ns.d.getDay()].slice(1);
+      const p = programmaDel(ns.d);
+      next = `<a class="next" href="#/allenamenti/lasik"><span class="eyebrow">Prossimo allenamento</span><b>${when} ${ns.d.getDate()} ${MESI[ns.d.getMonth()]} · ${esc(D.mieiOrari)}</b>${p ? `<span>Settimana ${p.week} · Seduta ${p.seduta} · carico ${p.load.toLowerCase()}</span>` : `<span>Judo grandi in dojo</span>`}</a>`;
     }
-  });
+    const me = B.lista.find(b => b.id === B.io.cintura), nx = B.lista.find(b => b.id === B.prossima);
+    app.innerHTML = head("Judo · Mogliano Veneto", "Il mio judo", "Teoria, allenamenti e programmi delle cinture in un posto solo.") + `
+      <div class="search"><input id="q" type="search" placeholder="Cerca una tecnica o un termine" autocomplete="off" aria-label="Cerca"><div id="res"></div></div>
+      ${next}
+      ${tiles([
+        { href: "#/allenamenti", label: "Allenamenti", text: "Programma post-LASIK, movimenti in classe, diario" },
+        { href: "#/teoria", label: "Teoria", text: "Storia, principi, Gokyo, kata, regole di gara" },
+        { href: "#/cinture", label: "Cinture", text: `Programmi per cintura (${B.anno}): in cantiere` },
+        { href: "#/glossario", label: "Glossario", text: "Il significato dei termini giapponesi" },
+        { href: "#/dojo", label: "Dojo", text: "Orari, palestra e appuntamenti" }
+      ])}
+      <div class="belt-me"><span>La tua cintura</span>${me ? `<b>${beltDot(me)} ${esc(me.nome)}</b>` : ""}<small>${esc(B.io.nota || "")}</small>${nx ? `<a href="#/cinture/${esc(nx.id)}">Prossima: ${esc(nx.nome)} →</a>` : ""}</div>`;
+    const q = app.querySelector("#q"), res = app.querySelector("#res");
+    q.addEventListener("input", () => {
+      const s = norm(q.value);
+      if (s.length < 2) { res.innerHTML = ""; return; }
+      const pages = T.filter(p => norm(p.title + p.text).includes(s)).map(p => `<a class="hit" href="#/teoria/${esc(p.id)}"><b>${esc(p.title)}</b><span>Teoria</span></a>`);
+      const terms = G.filter(g => norm(g.t + (g.alias || []).join("")).includes(s)).slice(0, 12).map(g => `<button type="button" class="hit has chip-open" data-term="${esc(norm(g.t))}"><b>${esc(g.t)}</b><span>${esc(g.d.replace(/\*\*/g, "").slice(0, 70))}</span></button>`);
+      const classe = allClasse().filter(v => norm(v.nome + (v.note || "")).includes(s)).slice(0, 6).map(v => `<a class="hit" href="#/allenamenti/classe"><b>${esc(v.nome)}</b><span>In classe · ${esc(v.cat)}</span></a>`);
+      const all = [...pages, ...terms, ...classe];
+      res.innerHTML = all.length ? all.join("") : `<p class="small">Nessun risultato.</p>`;
+      res.querySelectorAll(".chip-open").forEach(b => b.addEventListener("click", () => window.R.sheet.open(G.find(g => norm(g.t) === b.dataset.term))));
+    });
+  }
+
+  /* ---------- Allenamenti ---------- */
+  function allenamenti() {
+    app.innerHTML = head("Allenamenti", "Allenamenti", "Il programma di forza e stretching, i movimenti visti a lezione e il diario delle sedute.") + tiles([
+      { href: "#/allenamenti/lasik", label: "Programma post-LASIK", text: "6 settimane, lunedì e mercoledì, con disegni degli esercizi" },
+      { href: "#/allenamenti/classe", label: "In classe", text: "I movimenti fatti a lezione, da aggiungere pian piano" },
+      { href: "#/allenamenti/diario", label: "Diario", text: "Come è andata ogni seduta, con note sul carico" }
+    ]);
+  }
+
+  function lasik() {
+    app.innerHTML = head(C.eyebrow, C.title, C.lead, ["#/allenamenti", "Allenamenti"]) + `<div class="legend">${C.legend.map(l => `<span>${l.color ? `<i style="background:${l.color}"></i>` : ""}${esc(l.text)}</span>`).join("")}</div>
+      <nav class="subnav" aria-label="Sezioni"><ul>${C.sections.map(s => `<li><button type="button" data-go="${esc(s.id)}">${esc(s.nav)}</button></li>`).join("")}</ul></nav>
+      ${C.sections.map(s => `<section id="s-${esc(s.id)}"><div class="sec-head"><h2>${s.tag ? `<span class="tag">${esc(s.tag)}</span>` : ""}${esc(s.title)}</h2>${s.intro ? `<p>${esc(s.intro)}</p>` : ""}</div>${s.blocks.map(block).join("")}</section>`).join("")}`;
+    app.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => document.getElementById("s-" + b.dataset.go).scrollIntoView({ behavior: "smooth", block: "start" })));
+  }
+
+  // movimenti in classe: quelli nel file + quelli aggiunti dal telefono
+  const allClasse = () => [...L.voci.map(v => ({ ...v, fissa: true })), ...json("classe", [])].sort((a, b) => (b.data || "").localeCompare(a.data || ""));
+
+  function classe() {
+    const draw = () => {
+      const cat = app.querySelector("#fcat").value, s = norm(app.querySelector("#fq").value);
+      const list = allClasse().filter(v => (!cat || v.cat === cat) && (!s || norm(v.nome + (v.note || "") + (v.tag || []).join("")).includes(s)));
+      app.querySelector("#list").innerHTML = list.length ? list.map(v => `<article class="card"><div class="top"><h3>${esc(v.nome)}</h3><span class="dose">${esc(v.cat)}</span></div>${v.data ? `<div class="load">${esc(fmt(v.data))}</div>` : ""}${v.note ? `<p>${rich(v.note)}</p>` : ""}${v.tag && v.tag.length ? `<div class="chips">${v.tag.map(t => `<span class="chip">${esc(t)}</span>`).join("")}</div>` : ""}${v.fissa ? "" : `<button type="button" class="link" data-del="${esc(v.id)}">Elimina</button>`}</article>`).join("") : `<div class="callout"><b>Ancora niente qui</b><p>Dopo la lezione aggiungi quello che hai fatto: il nome del movimento e due righe di appunti.</p></div>`;
+      app.querySelectorAll("[data-del]").forEach(b => b.addEventListener("click", () => {
+        store.set("classe", JSON.stringify(json("classe", []).filter(v => v.id !== b.dataset.del))); draw();
+      }));
+    };
+    app.innerHTML = head("Allenamenti", "In classe", "I movimenti visti a lezione, da riempire man mano. Quelli che aggiungi qui restano sul telefono; per tenerli per sempre, usa «Esporta» e incollali in lezione.js.", ["#/allenamenti", "Allenamenti"]) + `
+      <form class="form" id="f"><h3>Aggiungi un movimento</h3>
+        <label>Data<input type="date" name="data" required value="${iso(new Date())}"></label>
+        <label>Categoria<select name="cat">${L.categorie.map(c => `<option>${esc(c)}</option>`).join("")}</select></label>
+        <label>Movimento<input name="nome" required maxlength="120" placeholder="es. Uchi mata dopo ko uchi gari"></label>
+        <label>Appunti<textarea name="note" rows="3" maxlength="800" placeholder="Cosa curare, errori, come ha spiegato il maestro"></textarea></label>
+        <button type="submit" class="btn">Aggiungi</button></form>
+      <div class="filters"><input id="fq" type="search" placeholder="Cerca nei movimenti" aria-label="Cerca nei movimenti"><select id="fcat" aria-label="Filtra per categoria"><option value="">Tutte le categorie</option>${L.categorie.map(c => `<option>${esc(c)}</option>`).join("")}</select></div>
+      <div id="list" class="stack"></div>
+      <p><button type="button" class="btn ghost" id="exp">Esporta per lezione.js</button> <span class="small" id="expmsg"></span></p>`;
+    app.querySelector("#f").addEventListener("submit", e => {
+      e.preventDefault();
+      const f = new FormData(e.target), v = { id: String(Date.now()), data: f.get("data"), cat: f.get("cat"), nome: f.get("nome").trim(), note: f.get("note").trim() };
+      if (!v.nome) return;
+      store.set("classe", JSON.stringify([...json("classe", []), v]));
+      e.target.nome.value = ""; e.target.note.value = ""; draw();
+    });
+    app.querySelector("#fq").addEventListener("input", draw);
+    app.querySelector("#fcat").addEventListener("change", draw);
+    app.querySelector("#exp").addEventListener("click", () => {
+      const txt = json("classe", []).map(v => `    { data: ${JSON.stringify(v.data)}, cat: ${JSON.stringify(v.cat)}, nome: ${JSON.stringify(v.nome)}, note: ${JSON.stringify(v.note || "")} },`).join("\n");
+      const msg = app.querySelector("#expmsg");
+      if (!txt) { msg.textContent = "Niente da esportare."; return; }
+      (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(() => { msg.textContent = "Copiato negli appunti."; }, () => { msg.textContent = "Copia non riuscita."; });
+    });
+    draw();
+  }
+
+  function diario() {
+    const draw = () => {
+      const list = json("diario", []).sort((a, b) => b.data.localeCompare(a.data));
+      app.querySelector("#list").innerHTML = list.length ? list.map(v => `<article class="card"><div class="top"><h3>${esc(fmt(v.data))}</h3><span class="dose">${esc(v.tipo)}</span></div>${v.carico ? `<div class="load">Carico: ${esc(v.carico)}</div>` : ""}${v.note ? `<p>${rich(v.note)}</p>` : ""}<button type="button" class="link" data-del="${esc(v.id)}">Elimina</button></article>`).join("") : `<div class="callout"><b>Ancora niente qui</b><p>Dopo ogni seduta segna come è andata: serve a capire quando aumentare il carico.</p></div>`;
+      app.querySelectorAll("[data-del]").forEach(b => b.addEventListener("click", () => { store.set("diario", JSON.stringify(json("diario", []).filter(v => v.id !== b.dataset.del))); draw(); }));
+    };
+    app.innerHTML = head("Allenamenti", "Diario", "Una riga per ogni seduta. Resta su questo telefono.", ["#/allenamenti", "Allenamenti"]) + `
+      <form class="form" id="f"><h3>Nuova seduta</h3>
+        <label>Data<input type="date" name="data" required value="${iso(new Date())}"></label>
+        <label>Seduta<select name="tipo"><option>Seduta A (lunedì)</option><option>Seduta B (mercoledì)</option><option>Judo in classe</option><option>Altro</option></select></label>
+        <label>Carico<select name="carico"><option value="">Non segnato</option><option>Troppo leggero</option><option>Giusto</option><option>Pesante</option></select></label>
+        <label>Note<textarea name="note" rows="3" maxlength="800" placeholder="Come sei stato, dolori, occhio, ripetizioni fatte"></textarea></label>
+        <button type="submit" class="btn">Salva</button></form>
+      <div id="list" class="stack"></div>`;
+    app.querySelector("#f").addEventListener("submit", e => {
+      e.preventDefault();
+      const f = new FormData(e.target);
+      store.set("diario", JSON.stringify([...json("diario", []), { id: String(Date.now()), data: f.get("data"), tipo: f.get("tipo"), carico: f.get("carico"), note: f.get("note").trim() }]));
+      e.target.note.value = ""; draw();
+    });
+    draw();
+  }
+
+  /* ---------- Teoria ---------- */
+  function teoria() {
+    app.innerHTML = head("Teoria", "Teoria", "Da leggere e da ripassare. Tocca i nomi delle tecniche per vederne il significato.") + tiles(T.map(p => ({ href: `#/teoria/${p.id}`, label: p.title, text: p.text })));
+  }
+  function teoriaPage(id) {
+    const p = T.find(x => x.id === id);
+    if (!p) return notFound();
+    const i = T.indexOf(p), prev = T[i - 1], next = T[i + 1];
+    app.innerHTML = head("Teoria", p.title, "", ["#/teoria", "Teoria"]) + `<div class="stack">${p.blocks.map(block).join("")}</div>
+      <div class="pager">${prev ? `<a href="#/teoria/${prev.id}">‹ ${esc(prev.title)}</a>` : "<span></span>"}${next ? `<a href="#/teoria/${next.id}">${esc(next.title)} ›</a>` : "<span></span>"}</div>`;
+  }
+
+  /* ---------- Cinture ---------- */
+  function cinture() {
+    const me = B.io.cintura;
+    app.innerHTML = head("Cinture", "Cinture", `I programmi per il ${B.anno} non sono ancora definiti: ogni cintura è **in cantiere** e si aggiorna quando il maestro li comunica. Intanto restano i programmi degli anni passati, come riferimento.`) + `
+      <div class="belts">${B.lista.map(b => `<a class="belt" href="#/cinture/${esc(b.id)}">${beltDot(b)}<b>${esc(b.nome)}</b><span>${b.id === me ? "la tua cintura" : b.id === B.prossima ? "la prossima" : ""}</span><em class="state ${b.stato === "in cantiere" ? "wip" : "ok"}">${esc(b.stato)}</em></a>`).join("")}</div>`;
+  }
+  function programma(p) {
+    return `<h3 class="sub">Teoria</h3><div class="card"><ul>${p.teoria.map(t => `<li>${esc(t)}</li>`).join("")}</ul></div>
+      <h3 class="sub">Pratica</h3><div class="acc">${p.pratica.map(s => `<details><summary>${esc(s.titolo)}</summary><div class="acc-body"><div class="chips">${s.voci.map(chip).join("")}</div></div></details>`).join("")}</div>`;
+  }
+  function cintura(id) {
+    const b = B.lista.find(x => x.id === id);
+    if (!b) return notFound();
+    const stdTodo = ["Chiedere al maestro il programma ufficiale di questa cintura", "Segnare qui la data dell'esame", "Aggiornare cinture.js con le tecniche richieste"];
+    const modo = store.get("modo:" + id) || "judo";
+    const prog = modo === "jujitsu" ? b.jujitsu : b.judo;
+    app.innerHTML = head("Cinture", `Cintura ${b.nome.toLowerCase()}`, "", ["#/cinture", "Cinture"]) + `
+      <div class="belt-hero" style="--belt:${b.colore}"><i></i><div><b>${esc(b.stato === "in cantiere" ? "In cantiere" : "Programma " + b.stato)}</b><span>${b.stato === "in cantiere" ? `Programma ${B.anno} non ancora definito.` : esc(b.aggiornato ? "Aggiornato " + b.aggiornato : "")}</span></div></div>
+      ${b.note ? `<p>${rich(b.note)}</p>` : ""}
+      <div class="stack">
+        <h3 class="sub">Da fare</h3>${block({ type: "checklist", id: "cintura-" + id, items: stdTodo })}
+        <div class="tabs2" role="tablist">${["judo", "jujitsu"].map(m => `<button type="button" data-modo="${m}" class="${m === modo ? "on" : ""}" role="tab" aria-selected="${m === modo}">${m === "judo" ? "Judo" : "Ju Jitsu"}</button>`).join("")}</div>
+        ${prog ? `<div class="callout info"><b>Programma di riferimento</b><p>È l'ultimo programma ricevuto per questa cintura, solo come promemoria: il programma ${B.anno} potrebbe cambiare. Tocca una tecnica per vedere il significato.</p></div>${programma(prog)}` : `<div class="callout"><b>Niente da mostrare</b><p>${modo === "judo" ? "Per questa cintura non ho un programma di riferimento di Judo." : "Per questa cintura non ho un programma di riferimento di Ju Jitsu."} Si compila in <code>cinture.js</code> quando arriva.</p></div>`}
+        <h3 class="sub">Intanto ripassa</h3>${block({ type: "links", items: [
+          { href: "#/teoria/storia", label: "Storia e fondatore" }, { href: "#/teoria/fasi", label: "Le tre fasi di una tecnica" },
+          { href: "#/teoria/gokyo", label: "Gokyo · le 40 proiezioni" }, { href: "#/teoria/neWaza", label: "Ne waza" }] })}
+      </div>`;
+    app.querySelectorAll("[data-modo]").forEach(t => t.addEventListener("click", () => { store.set("modo:" + id, t.dataset.modo); cintura(id); wire(app); }));
+  }
+
+  /* ---------- Glossario ---------- */
+  function glossario() {
+    const cats = [...new Set(G.map(g => g.cat))];
+    app.innerHTML = head("Glossario", "Glossario", `${G.length} termini. Cerca per nome o filtra per argomento.`) + `
+      <div class="filters"><input id="gq" type="search" placeholder="Cerca" autocomplete="off" aria-label="Cerca nel glossario"><select id="gcat" aria-label="Filtra per argomento"><option value="">Tutti gli argomenti</option>${cats.map(c => `<option>${esc(c)}</option>`).join("")}</select></div>
+      <div id="list" class="stack"></div>`;
+    const draw = () => {
+      const s = norm(app.querySelector("#gq").value), c = app.querySelector("#gcat").value;
+      const list = G.filter(g => (!c || g.cat === c) && (!s || norm(g.t + (g.alias || []).join("") + g.d).includes(s)));
+      app.querySelector("#list").innerHTML = list.length ? `<div class="gloss">${list.map(g => `<article><div class="gt"><b>${esc(g.t)}</b>${g.jp ? `<span class="jp">${esc(g.jp)}</span>` : ""}<em>${esc(g.cat)}</em></div><p>${rich(g.d)}</p>${g.n ? `<p class="small">${rich(g.n)}</p>` : ""}</article>`).join("")}</div>` : `<p class="small">Nessun termine trovato.</p>`;
+    };
+    app.querySelector("#gq").addEventListener("input", draw);
+    app.querySelector("#gcat").addEventListener("change", draw);
+    draw();
+  }
+
+  /* ---------- Dojo ---------- */
+  function dojo() {
+    app.innerHTML = head("Dojo", D.nome, `Stagione ${D.stagione}`) + `<div class="stack">
+      <h3 class="sub">Orari delle lezioni</h3>${block({ type: "table", head: ["Corso", "Giorni", "Orario"], rows: D.orari })}
+      <h3 class="sub">Dove e quando</h3>${block({ type: "list", items: [`**Palestra:** ${D.palestra}`, `**Inizio attività:** ${D.inizio}`, `**Fine attività:** ${D.fine}`] })}
+      <h3 class="sub">Eventi passati</h3>${block({ type: "cards", items: D.eventi.map(e => ({ title: e.titolo, sub: e.quando, text: e.text })) })}</div>`;
+  }
+
+  function notFound() { app.innerHTML = head("", "Pagina non trovata", "") + `<p><a href="#/">Torna alla home</a></p>`; }
+
+  /* ---------- Router ---------- */
+  const TABS = [["#/", "Home", "home"], ["#/allenamenti", "Allenamenti", "allenamenti"], ["#/teoria", "Teoria", "teoria"], ["#/cinture", "Cinture", "cinture"], ["#/glossario", "Glossario", "glossario"]];
+  const bar = document.createElement("nav");
+  bar.className = "tabbar"; bar.setAttribute("aria-label", "Menu principale");
+  bar.innerHTML = TABS.map(t => `<a href="${t[0]}" data-tab="${t[2]}">${t[1]}</a>`).join("");
+  document.body.appendChild(bar);
+
+  function route() {
+    const parts = (location.hash.replace(/^#\/?/, "") || "").split("/").filter(Boolean);
+    const [a, b] = parts;
+    window.R.sheet.close();
+    if (!a) home();
+    else if (a === "allenamenti") (b === "lasik" ? lasik : b === "classe" ? classe : b === "diario" ? diario : allenamenti)();
+    else if (a === "teoria") b ? teoriaPage(b) : teoria();
+    else if (a === "cinture") b ? cintura(b) : cinture();
+    else if (a === "glossario") glossario();
+    else if (a === "dojo") dojo();
+    else notFound();
+    wire(app);
+    bar.querySelectorAll("a").forEach(l => l.classList.toggle("on", (a || "home") === l.dataset.tab));
+    window.scrollTo(0, 0);
+  }
+  window.addEventListener("hashchange", route);
+  route();
 
   if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => { /* offline non disponibile */ });
 })();

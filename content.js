@@ -2,7 +2,7 @@
    Gli esercizi con i disegni stanno in exercises.js.
    Tipi di blocco: text, table, timeline, exercises, note, list, progress, tests */
 window.CONTENT = {
-  title: "Guida allenamento post-LASIK",
+  title: "Allenamento post-LASIK",
   eyebrow: "Judo · cintura verde · 6 settimane senza contatto",
   lead: "Lunedì e mercoledì, 12 ottobre – 18 novembre 2026. Attrezzatura: 4 dischi da 5 kg e le panche per sedersi. Ogni esercizio ha il disegno della posizione di partenza e di arrivo.",
   legend: [
@@ -93,22 +93,6 @@ window.CONTENT = {
           ["6", "De ashi barai, Okuri ashi barai, Sasae tsurikomi ashi, Hiza guruma", "Hiza guruma → Sasae tsurikomi ashi"]
         ] },
         { type: "text", text: "Se avanzano 2–3 minuti: spostamenti a vuoto (tsugi ashi, ayumi ashi, tai sabaki) in shizen tai e jigo tai. Per il ne waza vanno bene i movimenti da soli a terra (ebi, uscite d'anca, cambi di guardia), senza ponte sul collo." }
-      ]
-    },
-    {
-      id: "blu", nav: "Cintura blu", title: "Verso la cintura blu",
-      intro: "Non ho il programma ufficiale: questa è un'ipotesi sul passo successivo del Gokyo rispetto alla verde. Verificala col maestro.",
-      blocks: [
-        { type: "list", items: [
-          "Tecniche che probabilmente si aggiungono: tsurikomi goshi, ko soto gake, tsuri goshi, ashi guruma, harai tsurikomi ashi, kata guruma, yoko otoshi, tomoe nage",
-          "Spesso richiesti anche: prima serie del Nage no kata, più renraku e gaeshi",
-          "Dalla settimana 3 metti le loro entrate negli uchi-komi a vuoto, al posto di una tecnica già consolidata",
-          "Yoko otoshi e tomoe nage richiedono ukemi: solo a vuoto fino al via libera"
-        ] },
-        { type: "note", title: "Da fare", checks: [
-          "Chiedere al maestro il programma della cintura blu",
-          "Chiedere all'oculista quando riprendere ukemi e contatto"
-        ] }
       ]
     }
   ]

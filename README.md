@@ -1,19 +1,36 @@
 # Judo Mogliano
 
-Guida agli allenamenti di judo e, in futuro, ai programmi delle varie cinture. È un'app web installabile su iPhone: si apre a schermo intero e funziona anche senza rete.
+App web installabile su iPhone per il judo: teoria, allenamenti, programmi di cintura e glossario. Si apre a schermo intero e funziona anche senza rete.
 
-## Cosa modificare
-- `content.js`: testi, tabelle, date, tecniche, progressione.
-- `exercises.js`: dosi, carichi e consigli di ogni esercizio (i testi tra virgolette). Le posizioni dei disegni sono nelle righe `f: [...]`: non toccarle se non sai cosa fai.
-- `style.css`: colori e aspetto.
-- `figures.js`, `app.js`, `sw.js`: motore dei disegni, costruzione della pagina, funzionamento offline. Non servono per cambiare i contenuti.
-- `cinture/`: programmi d'esame delle cinture.
+## Menu dell'app
+- **Allenamenti**: programma post-LASIK (6 settimane), movimenti fatti in classe, diario delle sedute.
+- **Teoria**: storia, principi, tre fasi, classificazione, Gokyo, posizioni e cadute, ne waza, regole IJF 2025–28, kata, Ju Jitsu, domande d'esame.
+- **Cinture**: una pagina per cintura, «in cantiere» finché il maestro non comunica i programmi.
+- **Glossario**: termini giapponesi con significato; i nomi delle tecniche nelle altre pagine si possono toccare.
+- **Dojo**: orari e appuntamenti.
 
-Dopo una modifica, GitHub Pages pubblica la nuova versione in uno o due minuti. Apri l'app con la rete attiva: scarica da sola i file nuovi e alla riapertura successiva li vedi.
+## Dove modificare i contenuti
+| File | Cosa contiene |
+| --- | --- |
+| `cinture.js` | programmi per cintura, stato («in cantiere» / «definito»), cintura attuale |
+| `lezione.js` | movimenti visti a lezione (si possono anche aggiungere dall'app, sul telefono) |
+| `teoria.js` | pagine di teoria |
+| `glossario.js` | termini e significati |
+| `dojo.js` | orari, palestra, eventi |
+| `content.js`, `exercises.js` | programma post-LASIK e esercizi |
+| `style.css` | colori e aspetto |
+
+`figures.js` (disegni), `render.js`, `app.js` (schermate), `sw.js` (offline) non servono per cambiare i contenuti.
+Se aggiungi un file nuovo, inseriscilo anche in `index.html` e nell'elenco `FILES` di `sw.js`, e cambia il numero di `CACHE` in `sw.js`.
+
+Dopo una modifica GitHub Pages pubblica in uno o due minuti. Apri l'app con la rete attiva: scarica da sola i file nuovi.
 
 ## Installazione su iPhone
-1. Apri l'indirizzo dell'app in **Safari** (non in Chrome).
+1. Apri l'indirizzo dell'app in **Safari**.
 2. Tocca Condividi (il quadrato con la freccia).
-3. Scegli **Aggiungi alla schermata Home** e conferma.
+3. Scegli **Aggiungi alla schermata Home**.
 
-Le sedute segnate e i test restano salvati sul telefono.
+Spunte, diario, movimenti aggiunti e test restano salvati sul telefono.
+
+## Fonti
+Programmi di cintura FIJLKAM del dojo (Judo e Ju Jitsu), «Aggiornamento del Regolamento IJF 2025–2028», dispensa «I Kata di Judo» (M° Mainenti), «Programma fondamentali Ju Jitsu FIJLKAM».

@@ -1,7 +1,7 @@
 {
-  "name": "Guida allenamento post-LASIK",
-  "short_name": "Guida Judo",
-  "description": "Scheda di 6 settimane per il judo senza contatto dopo FemtoLASIK",
+  "name": "Judo Mogliano",
+  "short_name": "Judo",
+  "description": "Teoria, allenamenti e programmi di cintura del judo",
   "lang": "it",
   "start_url": "./",
   "scope": "./",
