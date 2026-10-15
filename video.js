@@ -104,3 +104,10 @@ window.VIDEO = {
 };
 // nomi diversi tra i programmi italiani e il Kodokan
 window.VIDEO_ALIAS = { "De ashi barai": "De-ashi-harai", "Okuri ashi barai": "Okuri-ashi-harai", "Hon kesa gatame": "Kesa-gatame", "Kata ha jime": "Kataha-jime", "Sode guruma jime": "Sode-guruma-jime", "Sankaku gatame": "Ude-hishigi-sankaku-gatame" };
+
+// Tecniche che non hanno un video proprio nell'elenco del Kodokan: si mostra il video più vicino, con una nota.
+window.VIDEO_EXTRA = {
+  "Sasae tsurikomi ashi": { id: "699i--pvYmE", nota: "Nell'elenco del Kodokan questa tecnica non ha il link al video. Questo è un caricamento YouTube con il titolo in stile Kodokan (支釣込足 / Sasae-tsurikomi-ashi), ma il canale non è verificato: guardalo con il maestro." },
+  "Makura kesa gatame": { rif: "Kuzure-kesa-gatame", nota: "Il Kodokan non la elenca a parte: è una variante di kesa gatame (la testa di uke appoggiata sulla gamba di tori come un cuscino). Qui c'è il video di kuzure kesa gatame, la forma più vicina." },
+  "Kuzure yoko shiho gatame": { rif: "Yoko-shiho-gatame", nota: "Il Kodokan non la elenca a parte: è una variante di yoko shiho gatame. Qui c'è il video della forma base; cambia la posizione delle braccia." }
+};

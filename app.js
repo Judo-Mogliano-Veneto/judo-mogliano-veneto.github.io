@@ -242,9 +242,12 @@
   const TE = window.TECNICHE, V = window.VIDEO || {}, VA = window.VIDEO_ALIAS || {};
   const CATALOGO = [["Proiezioni · 1° kyo", "Gokyo · 1° kyo"], ["Proiezioni · 2° kyo", "Gokyo · 2° kyo"], ["Proiezioni · 3° kyo", "Gokyo · 3° kyo"], ["Proiezioni · 4° kyo", "Gokyo · 4° kyo"], ["Proiezioni · 5° kyo", "Gokyo · 5° kyo"], ["Immobilizzazioni", "Immobilizzazioni"], ["Strangolamenti", "Strangolamenti"], ["Leve", "Leve articolari"]];
   const VN = {}; Object.keys(V).forEach(k => { VN[norm(k)] = V[k]; });
-  const videoDi = name => VN[norm(VA[name] || name)] || VN[norm(String(name).replace(/shio/i, "shiho"))] || null;
+  const VX = {}; Object.entries(window.VIDEO_EXTRA || {}).forEach(([k, v]) => { VX[norm(k)] = v; });
+  const extraDi = name => VX[norm(name)] || VX[norm(String(name).replace(/shio/i, "shiho"))] || null;
+  const videoBase = name => VN[norm(VA[name] || name)] || VN[norm(String(name).replace(/shio/i, "shiho"))] || null;
   const guidaDi = g => TE.find(t => norm(t.nome) === norm(g.t));
   const voci = () => G.filter(g => CATALOGO.some(c => c[0] === g.cat) && !/^(Seoi nage|Morote)/.test(g.t));
+  const videoDi = name => { const x = extraDi(name); return videoBase(name) || (x && (x.id || videoBase(x.rif))) || null; };
   const videoBox = (id, name) => id ? `<div class="yt" data-yt="${esc(id)}"><button type="button" class="yt-play" aria-label="Guarda il video di ${esc(name)}"><span class="yt-ico">▶</span><b>Guarda il video del Kodokan</b><small>Si carica qui solo quando tocchi. Serve la rete.</small></button></div><p class="small"><a href="https://www.youtube.com/watch?v=${esc(id)}" target="_blank" rel="noopener noreferrer">Apri su YouTube ↗</a></p>` : `<div class="callout"><b>Video non disponibile</b><p>Il Kodokan non ha un video di questa tecnica nel suo elenco. Si può aggiungere in <code>video.js</code>.</p></div>`;
   // il video vero si carica solo al tocco (niente traffico e niente YouTube finché non serve)
   app.addEventListener("click", e => {
@@ -273,6 +276,13 @@
     app.querySelector("#tq").addEventListener("input", draw);
     draw();
   }
+  // passi con lo schema visto dall'alto (pianta.js), tutti alla stessa scala
+  const passi = t => {
+    const P = window.Plan, con = t.passi.filter(p => p.pianta);
+    const cr = P && con.length ? P.cornice(con.map(p => p.pianta)) : null;
+    const leg = P && con.length ? `<p class="small plan-key"><b style="color:#2f66c4">Blu = tori</b> · bianco = uke · visto dall'alto. S e D sono i piedi sinistro e destro; contorno tratteggiato = piede sollevato, piede sbiadito = dov'era prima. Punto giallo = presa.</p>` : "";
+    return leg + `<ol class="steps">${t.passi.map(p => `<li><b>${esc(p.titolo)}</b>${P && p.pianta ? `<div class="plan">${P.plan(p.pianta, { cornice: cr })}</div>` : ""}<span>${rich(p.testo)}</span></li>`).join("")}</ol>`;
+  };
   const ul = items => `<div class="card"><ul>${items.map(i => `<li>${rich(i)}</li>`).join("")}</ul></div>`;
   function tecnica(slug) {
     const g = G.find(x => norm(x.t) === slug) || G.find(x => norm(x.t) === norm(slug));
@@ -282,10 +292,10 @@
     const sign = t ? t.sign : g.d;
     const gruppo = t ? `${t.gruppo}${t.kyo ? " · " + t.kyo : ""}` : g.cat;
     let body = `<label class="know"><input type="checkbox" data-key="sa:${esc(norm(nome))}"> La so fare</label>
-      <h3 class="sub">Video</h3>${videoBox(vid, nome)}`;
+      <h3 class="sub">Video</h3>${videoBox(vid, nome).replace(/Guarda il video del Kodokan(?=<\/b>)/, extraDi(nome) && extraDi(nome).id ? "Guarda il video" : "Guarda il video del Kodokan")}${extraDi(nome) ? `<p class="small">${esc(extraDi(nome).nota)}</p>` : ""}`;
     if (t) {
       body += `<div class="card"><b>Quando si usa</b><p>${rich(t.quando)}</p><b>Presa</b><p>${rich(t.presa)}</p></div>
-        <h3 class="sub">I passi</h3>${block({ type: "steps", items: t.passi.map(p => ({ title: p.titolo, text: p.testo })) })}
+        <h3 class="sub">I passi</h3>${passi(t)}
         <h3 class="sub">Errori comuni</h3>${ul(t.errori)}
         <h3 class="sub">Come allenarla</h3>${ul(t.uchikomi)}
         <h3 class="sub">Collegamenti</h3>${ul(t.collegamenti)}

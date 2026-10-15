@@ -233,3 +233,13 @@ button.link { font: inherit; background: none; border: 0; color: var(--muted); t
 .yt-ico { width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; background: rgba(255, 255, 255, .16); font-size: 1.5rem; }
 .yt-play small { opacity: .8; }
 .sheet-box .btn { justify-self: start; text-decoration: none; margin-top: 6px; }
+
+.plan{background:var(--bg);border-radius:10px;padding:6px;margin:6px 0 8px}
+.plan-leg{margin:6px 4px 0;padding:0;list-style:none;counter-reset:l;font-size:.82rem;line-height:1.35}
+.plan-leg li{counter-increment:l;display:flex;gap:6px;align-items:baseline;margin:2px 0}
+.plan-leg li::before{content:counter(l);flex:none;width:16px;height:16px;border-radius:50%;background:var(--c);color:#fff;font-size:.68rem;font-weight:800;display:grid;place-items:center}
+.steps li:has(.plan)::before { grid-row: span 3; }
+.steps .plan { grid-column: 2; }
+.plan svg { width: 100%; max-height: 300px; }
+.steps .plan-leg li { display: flex; background: none; border: 0; padding: 0; border-radius: 0; color: var(--ink); }
+.steps .plan-leg li::before { content: counter(l); grid-row: auto; width: 16px; height: 16px; font-size: .68rem; font-family: inherit; background: var(--c); color: #fff; }
