@@ -350,7 +350,15 @@
   const TABS = [["#/", "Home", "home"], ["#/allenamenti", "Allenamenti", "allenamenti"], ["#/teoria", "Teoria", "teoria"], ["#/tecniche", "Tecniche", "tecniche"], ["#/cinture", "Cinture", "cinture"]];
   const bar = document.createElement("nav");
   bar.className = "tabbar"; bar.setAttribute("aria-label", "Menu principale");
-  bar.innerHTML = TABS.map(t => `<a href="${t[0]}" data-tab="${t[2]}">${t[1]}</a>`).join("");
+  // icone semplici a tratto (24x24), così il menu si capisce anche senza leggere
+  const ICO = {
+    home: '<path d="M3 11 12 4l9 7"/><path d="M5.5 9.5V20h13V9.5"/><path d="M10 20v-5h4v5"/>',
+    allenamenti: '<path d="M6.5 7v10M17.5 7v10M3.5 9.5v5M20.5 9.5v5M6.5 12h11"/>',
+    teoria: '<path d="M4 5.5C6.5 4.5 9.5 4.5 12 6c2.5-1.5 5.5-1.5 8-.5V19c-2.5-1-5.5-1-8 .5-2.5-1.5-5.5-1.5-8-.5Z"/><path d="M12 6v13.5"/>',
+    tecniche: '<circle cx="12" cy="4.8" r="2"/><path d="M12 7.5v6M7 10l5 1.5 5-1.5M12 13.5l-4 6.5M12 13.5l4 6.5"/>',
+    cinture: '<path d="M2.5 9h7.5M14 9h7.5M2.5 13h7.5M14 13h7.5"/><rect x="10" y="7.5" width="4" height="7" rx="1"/><path d="M10.6 14.5 8 20.5M13.4 14.5l2.6 6"/>'
+  };
+  bar.innerHTML = TABS.map(t => `<a href="${t[0]}" data-tab="${t[2]}"><svg viewBox="0 0 24 24" aria-hidden="true">${ICO[t[2]]}</svg><span>${t[1]}</span></a>`).join("");
   document.body.appendChild(bar);
 
   app.addEventListener("click", e => {
