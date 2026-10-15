@@ -280,3 +280,5 @@ button.link { font: inherit; background: none; border: 0; color: var(--muted); t
 .seg button[aria-pressed="true"] { background: var(--accent); color: var(--surface); }
 .viste[data-v="alto"] .v-lato, .viste[data-v="alto"] .vk-lato, .viste[data-v="lato"] .v-alto, .viste[data-v="lato"] .vk-alto { display: none; }
 .v-lato svg { width: 100%; height: auto; max-height: 320px; display: block; }
+.logo-home{display:block;margin:4px 0 0;height:auto;width:84px}
+.logo-home{border-radius:10px;margin-bottom:10px}

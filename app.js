@@ -55,7 +55,7 @@
     const beltCard = me
       ? `<div class="belt-me"><span>La tua cintura</span><b>${beltDot(me)} ${esc(me.nome)}</b>${nx ? `<a href="#/cinture/${esc(nx.id)}">Prossima: ${esc(nx.nome)} →</a>` : ""}<a href="#/profilo">Cambia profilo</a></div>`
       : `<a class="belt-me setup" href="#/profilo"><span>Profilo</span><b>Scegli la tua cintura</b><small>Così la home e i menu si adattano a te. Resta solo su questo telefono.</small></a>`;
-    app.innerHTML = head("Judo · Ju Jitsu", "Judo Mogliano Veneto", "Teoria, allenamenti e programmi delle cinture in un posto solo.") + `
+    app.innerHTML = `<img class="logo-home" src="icons/logo.png" alt="Logo Polisportiva Mogliano Veneto" width="84" height="111">` + head("Judo · Ju Jitsu", "Judo Mogliano Veneto", "Teoria, allenamenti e programmi delle cinture in un posto solo.") + `
       <div class="search"><input id="q" type="search" placeholder="Cerca una tecnica o un termine" autocomplete="off" aria-label="Cerca"><div id="res"></div></div>
       ${cards}${beltCard}
       ${tiles([
