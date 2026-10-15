@@ -1,70 +1,22 @@
-/* Guide tecnica per tecnica. Ogni passo ha testo e disegno (tori blu, uke bianco).
-   Il disegno è schematico: serve a ricordare la sequenza, le prese precise si vedono nei video. */
+/* Schede tecnica passo per passo (testo). Il video ufficiale del Kodokan si aggiunge da solo da video.js.
+   Le tecniche senza scheda qui hanno comunque la pagina con significato e video. */
 window.TECNICHE = [];
 (function () {
   const T = window.TECNICHE;
-  // gambe in piedi: x del piede vicino e lontano, verso = 1 (destra) o -1 (sinistra)
-  const feet = (a, b, v) => ({ f1: { p: [a, 9], h: [v, 0], d: v > 0 ? 0 : 180 }, f2: { p: [b, 9], h: [v, 0], d: v > 0 ? 0 : 180 } });
 
   T.push({
     id: "osoto-gari", nome: "O soto gari", gruppo: "Ashi waza", kyo: "1° kyo",
-    passi: [
-      { titolo: "Presa e posizione",
-        tori: { sh: [0, 142], ta: 88, ...feet(14, -12, 1), w1: { p: "@lapel", h: [-.3, -1] }, w2: { p: [46, 114], h: [-.3, -1] } },
-        uke: { sh: [62, 142], ta: 92, ...feet(46, 72, -1), w1: { p: "@lapel", h: [.3, -1] }, w2: { p: [16, 114], h: [.3, -1] } } },
-      { titolo: "Kuzushi",
-        tori: { sh: [20, 140], ta: 84, ...feet(28, 2, 1), w1: { p: "@lapel", h: [-.3, -1] }, w2: { p: [58, 116], h: [-.3, -1] } },
-        uke: { sh: [74, 141], ta: 76, ...feet(50, 78, -1), w1: { p: "@lapel", h: [.3, -1] }, w2: { p: [28, 116], h: [.3, -1] } },
-        arrows: [{ from: [48, 170], to: [96, 178], label: "indietro" }] },
-      { titolo: "Tsukuri",
-        tori: { hip: [38, 94], ta: 66, f2: { p: [44, 9], h: [1, 0] }, f1: { fk: [205, 245] }, w1: { p: "@lapel", h: [-.3, -1] }, w2: { p: [84, 116], h: [-.3, -1] } },
-        uke: { sh: [92, 138], ta: 68, ...feet(50, 82, -1), w1: { p: "@lapel", h: [.3, -1] }, w2: { p: [46, 116], h: [.3, -1] } } },
-      { titolo: "Kake",
-        tori: { hip: [40, 95], ta: 44, f2: { p: [44, 9], h: [1, 0] }, f1: { fk: [168, 166] }, w1: { p: [96, 118], h: [0, -1] }, w2: { p: [88, 120], h: [-.3, -1] } },
-        uke: { hip: [112, 70], ta: 12, f1: { fk: [150, 158] }, f2: { fk: [190, 215] }, a1: [-20, -10], a2: [150, 140], hh: 10 },
-        arrows: [{ from: [112, 156], to: [140, 138], label: "cade" }] }
-    ]
+    passi: [{ titolo: "Presa e posizione" }, { titolo: "Kuzushi" }, { titolo: "Tsukuri" }, { titolo: "Kake" }]
   });
 
   T.push({
     id: "o-uchi-gari", nome: "O uchi gari", gruppo: "Ashi waza", kyo: "1° kyo",
-    passi: [
-      { titolo: "Presa e posizione",
-        tori: { sh: [0, 142], ta: 88, ...feet(14, -12, 1), w1: { p: "@lapel", h: [-.3, -1] }, w2: { p: [52, 114], h: [-.3, -1] } },
-        uke: { sh: [62, 142], ta: 92, ...feet(46, 72, -1), w1: { p: "@lapel", h: [.3, -1] }, w2: { p: [16, 114], h: [.3, -1] } } },
-      { titolo: "Kuzushi",
-        tori: { sh: [24, 140], ta: 84, ...feet(34, 6, 1), w1: { p: "@lapel", h: [-.3, -1] }, w2: { p: [60, 116], h: [-.3, -1] } },
-        uke: { sh: [72, 141], ta: 78, ...feet(48, 80, -1), w1: { p: "@lapel", h: [.3, -1] }, w2: { p: [30, 116], h: [.3, -1] } },
-        arrows: [{ from: [46, 170], to: [92, 176], label: "indietro" }] },
-      { titolo: "Tsukuri",
-        tori: { hip: [34, 94], ta: 78, f2: { p: [34, 9], h: [1, 0] }, f1: { p: [80, 24], h: [1, -.3] }, w1: { p: "@lapel", h: [-.3, -1] }, w2: { p: [70, 118], h: [-.3, -1] } },
-        uke: { sh: [86, 139], ta: 72, ...feet(60, 94, -1), w1: { p: "@lapel", h: [.3, -1] }, w2: { p: [40, 116], h: [.3, -1] } } },
-      { titolo: "Kake",
-        tori: { hip: [36, 92], ta: 64, f2: { p: [34, 9], h: [1, 0] }, f1: { p: [100, 40], h: [1, -.2] }, w1: { p: [90, 120], h: [0, -1] }, w2: { p: [84, 122], h: [0, -1] } },
-        uke: { hip: [112, 82], ta: 30, f1: { fk: [158, 166] }, f2: { fk: [196, 220] }, a1: [-25, -15], a2: [150, 140], hh: 28 },
-        arrows: [{ from: [114, 158], to: [142, 140], label: "cade" }] }
-    ]
+    passi: [{ titolo: "Presa e posizione" }, { titolo: "Kuzushi" }, { titolo: "Tsukuri" }, { titolo: "Kake" }]
   });
 
   T.push({
     id: "ippon-seoi-nage", nome: "Ippon seoi nage", gruppo: "Te waza", kyo: "1° kyo",
-    passi: [
-      { titolo: "Presa e posizione",
-        tori: { sh: [0, 142], ta: 88, ...feet(14, -12, 1), w1: { p: "@lapel", h: [-.3, -1] }, w2: { p: [52, 114], h: [-.3, -1] } },
-        uke: { sh: [62, 142], ta: 92, ...feet(46, 72, -1), w1: { p: "@lapel", h: [.3, -1] }, w2: { p: [16, 114], h: [.3, -1] } } },
-      { titolo: "Kuzushi",
-        tori: { sh: [22, 140], ta: 88, ...feet(30, 4, 1), w1: { p: "@lapel", h: [-.3, -1] }, w2: { p: [60, 128], h: [-.3, -1] } },
-        uke: { sh: [60, 142], ta: 100, f1: { p: [40, 9], h: [-1, 0], d: 180 }, f2: { p: [68, 9], h: [-1, 0], d: 180 }, w1: { p: "@lapel", h: [.3, -1] }, w2: { p: [30, 126], h: [.3, -1] } },
-        arrows: [{ from: [46, 188], to: [16, 194], label: "avanti e su" }] },
-      { titolo: "Tsukuri",
-        tori: { flip: true, hip: [38, 92], ta: 98, f1: { p: [30, 9], h: [-1, 0], d: 180 }, f2: { p: [52, 9], h: [-1, 0], d: 180 }, w1: { p: [48, 128], h: [0, -1] }, w2: { p: [52, 122], h: [0, -1] } },
-        uke: { sh: [66, 140], ta: 100, f1: { p: [48, 9], h: [-1, 0], d: 180 }, f2: { p: [74, 9], h: [-1, 0], d: 180 }, a1: [-70, -60], a2: [-60, -40] },
-        front: "tori" },
-      { titolo: "Kake",
-        tori: { flip: true, hip: [40, 88], ta: 152, f1: { p: [28, 9], h: [-1, 0], d: 180 }, f2: { p: [52, 9], h: [-1, 0], d: 180 }, w1: { p: [18, 98], h: [0, -1] }, w2: { p: [26, 92], h: [0, -1] } },
-        uke: { hip: [58, 126], ta: 196, f1: { fk: [24, 12] }, f2: { fk: [40, 70] }, a1: [200, 230], a2: [210, 250], hh: 200 },
-        arrows: [{ from: [70, 150], to: [20, 150], label: "sopra la spalla" }], front: "tori" }
-    ]
+    passi: [{ titolo: "Presa e posizione" }, { titolo: "Kuzushi" }, { titolo: "Tsukuri" }, { titolo: "Kake" }]
   });
 
   // testi per tecnica (id -> campi); i passi prendono il testo nell'ordine
@@ -121,7 +73,7 @@ window.TECNICHE = [];
     tc.passi.forEach((p, i) => { p.testo = x.testi[i]; });
   });
 
-  // senza disegno (per ora): solo testo e video
+  // tecniche a terra
   T.push({
     id: "hon-kesa-gatame", nome: "Hon kesa gatame", gruppo: "Osaekomi waza", kyo: "",
     sign: "Controllo a sciarpa (kesa = la stola del monaco): il controllo di base per l'immobilizzazione.",
@@ -136,8 +88,7 @@ window.TECNICHE = [];
     errori: ["Busto alto, senza peso su uke", "Braccio di uke libero", "Gambe troppo vicine: uke ti ribalta", "Perdere il contatto con il petto"],
     uchikomi: ["Entrata e posizione in sequenza, con un compagno fermo", "Tenere il controllo per 20 secondi e poi cambiare ruolo"],
     collegamenti: ["Hon kesa gatame → Kuzure kesa gatame (se uke libera il braccio)", "Hon kesa gatame → Ushiro kesa gatame"],
-    sicurezza: "Uke batte con la mano quando non riesce a uscire e ha la testa o il braccio in difficoltà: tori allenta subito.",
-    nota: "Disegno non ancora pronto: serve una vista dall'alto. Guarda il video e chiedi la presa precisa al maestro."
+    sicurezza: "Uke batte con la mano quando non riesce a uscire e ha la testa o il braccio in difficoltà: tori allenta subito."
   });
   T.push({
     id: "hadaka-jime", nome: "Hadaka jime", gruppo: "Shime waza", kyo: "",
@@ -153,8 +104,6 @@ window.TECNICHE = [];
     errori: ["Braccio sulla gola invece che ai lati del collo", "Distanza dal corpo di uke", "Stringere di colpo", "Non lasciare subito dopo il segnale di resa"],
     uchikomi: ["Entrata e chiusura del braccio, senza stringere, con un compagno fermo", "Posizione dietro uke da diverse posizioni (in piedi, seduto, quadrupedico)"],
     collegamenti: ["Hadaka jime → Okuri eri jime (se uke abbassa il mento)"],
-    sicurezza: "Si lavora sempre in modo lento e progressivo. Appena uke batte la mano (resa), tori lascia subito. Impara gli strangolamenti solo con il maestro.",
-    nota: "Disegno non ancora pronto. Guarda il video e chiedi la posizione precisa al maestro."
+    sicurezza: "Si lavora sempre in modo lento e progressivo. Appena uke batte la mano (resa), tori lascia subito. Impara gli strangolamenti solo con il maestro."
   });
-  T.forEach(tc => { tc.video = [{ label: "Kodokan Judo Institute", q: "Kodokan Judo Institute " + tc.nome }, { label: "Tutorial in italiano", q: tc.nome + " judo tutorial italiano" }]; });
 })();

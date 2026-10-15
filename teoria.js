@@ -208,7 +208,8 @@ window.TEORIA = [
       { type: "chips", title: "Osaekomi", items: ["Kesa gatame", "Kata gatame", "Kami shiho gatame", "Yoko shiho gatame", "Kuzure kami shiho gatame"] },
       { type: "chips", title: "Shime", items: ["Kata juji jime", "Hadaka jime", "Okuri eri jime", "Kata ha jime", "Gyaku juji jime"] },
       { type: "chips", title: "Kansetsu", items: ["Ude garami", "Ude hishigi juji gatame", "Ude hishigi ude gatame", "Ude hishigi hiza gatame", "Ashi garami"] },
-      { type: "callout", tone: "info", title: "Fonte e verifica", text: "Il Nage no kata è tratto dalla dispensa «I Kata di Judo» (M° Daniele Mainenti, 6° dan, edizione 2023). L'elenco del Katame no kata è dalla tradizione Kodokan: verifica con il maestro l'ordine esatto." }
+      { type: "callout", tone: "info", title: "Fonte e verifica", text: "Il Nage no kata è tratto dalla dispensa «I Kata di Judo» (M° Daniele Mainenti, 6° dan, edizione 2023). L'elenco del Katame no kata è dalla tradizione Kodokan: verifica con il maestro l'ordine esatto." },
+      { type: "links", items: [{ href: "https://kdkjd.org/kodokan-kata-textbook/", label: "Manuali ufficiali dei kata (Kodokan)", text: "PDF in inglese di Nage, Katame, Kime, Ju, Goshin jutsu, Itsutsu e Koshiki no kata ↗" }] }
     ]
   },
   {

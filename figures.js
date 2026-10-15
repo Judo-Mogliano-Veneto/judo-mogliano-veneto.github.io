@@ -326,54 +326,5 @@
 
 
 
-  // ---------- scene a due figure (tori e uke) ----------
-  // Ogni passo ha due pose in coordinate del mondo (cm, y verso l'alto): tori guarda a destra, uke a sinistra (flip).
-  // I bersagli delle mani possono essere stringhe come "@uke.lapel": punti sul busto dell'altra figura.
-  const GI = {
-    tori: "--top:#2f66c4;--top-far:#2552a0;--short:#2a56a8;--short-far:#1f4585;--shoe:#e9c9a8;--shoe-far:#c9a888",
-    uke: "--top:#f4f4ef;--top-far:#d4d4cc;--short:#ebebe4;--short-far:#c9c9c0;--shoe:#e9c9a8;--shoe-far:#c9a888"
-  };
-  function anchors(p) {
-    const u = dv(p.ta ?? 90), hip = p.sh ? sub(p.sh, mul(u, TL)) : p.hip, sh = p.sh ? p.sh : add(hip, mul(u, TL));
-    const l = p.flip ? [-u[1], u[0]] : [u[1], -u[0]], at = (t, side, w) => add(add(hip, mul(u, TL * t)), mul(l, side * w));
-    return { sh, hip, lapel: at(.82, 1, interp(TF, .82) * .9), chest: at(.65, 1, interp(TF, .65)), belt: at(.1, 1, interp(TF, .1)), back: at(.6, -1, interp(TB, .6)),
-      neck: at(1, 0, 0), head: add(add(sh, mul(u, 2)), mul(u, 18)), side: at(.3, 0, 0) };
-  }
-  function resolve(p, other, who) {
-    const q = JSON.parse(JSON.stringify(p));
-    const A = anchors(other);
-    ["w1", "w2"].forEach(k => {
-      if (q[k] && typeof q[k].p === "string") {
-        const m = q[k].p.match(/^@(?:\w+\.)?(\w+)$/);
-        if (!m || !A[m[1]]) throw new Error("bersaglio sconosciuto " + q[k].p);
-        q[k].p = A[m[1]].slice();
-        if (q[k].off) q[k].p = add(q[k].p, q[k].off);
-      }
-    });
-    return q;
-  }
-  function scene(step) {
-    const t0 = Object.assign({ view: "side" }, step.tori), u0 = Object.assign({ view: "side", flip: true, hd: 0 }, step.uke);
-    const tp = resolve(t0, u0, "tori"), up = resolve(u0, t0, "uke");
-    const St = solve(tp, "tori"), Su = solve(up, "uke");
-    let minx = 1e9, maxx = -1e9, miny = 1e9, maxy = -1e9;
-    [St, Su].forEach(S => S.pts.forEach(q => { minx = Math.min(minx, q[0]); maxx = Math.max(maxx, q[0]); miny = Math.min(miny, q[1]); maxy = Math.max(maxy, q[1]); }));
-    (step.arrows || []).forEach(a => [a.from, a.to].forEach(q => { minx = Math.min(minx, q[0] - 6); maxx = Math.max(maxx, q[0] + 6); miny = Math.min(miny, q[1] - 6); maxy = Math.max(maxy, q[1] + 6); }));
-    const Wf = Math.max(230, maxx - minx + 30), Hf = Math.max(150, maxy + 50), cx = (minx + maxx) / 2;
-    const T = q => [Wf / 2 + (q[0] - cx), Hf - 26 - q[1]];
-    const ex = { gi: true, name: step.titolo, _gx: [cx - Wf / 2 + 6, cx + Wf / 2 - 6] };
-    const draw = (S, who) => `<g style="${GI[who]}">${render(S, T, ex)}</g>`;
-    let o = step.front === "uke" ? draw(St, "tori") + draw(Su, "uke") : draw(Su, "uke") + draw(St, "tori");
-    const lab = (S, name) => { const c = T(add(S.hc, [0, 17])); return `<text x="${c[0].toFixed(1)}" y="${c[1].toFixed(1)}" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted)" font-family="system-ui, sans-serif">${name}</text>`; };
-    o += lab(St, "TORI") + lab(Su, "UKE");
-    (step.arrows || []).forEach(a => {
-      const p0 = T(a.from), p1 = T(a.to), d = sub(p1, p0), L = len(d) || 1, e = mul(d, 1 / L), n = rot(e);
-      const h1 = sub(p1, add(mul(e, 8), mul(n, 5))), h2 = sub(p1, sub(mul(e, 8), mul(n, 5)));
-      o += `<g stroke="var(--hot)" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M${p0[0].toFixed(1)} ${p0[1].toFixed(1)}L${p1[0].toFixed(1)} ${p1[1].toFixed(1)}"${a.dash ? ' stroke-dasharray="5 4"' : ""}/><path d="M${h1[0].toFixed(1)} ${h1[1].toFixed(1)}L${p1[0].toFixed(1)} ${p1[1].toFixed(1)}L${h2[0].toFixed(1)} ${h2[1].toFixed(1)}"/></g>`;
-      if (a.label) o += `<text x="${(p1[0] + 4).toFixed(1)}" y="${(p1[1] - 6).toFixed(1)}" font-size="10" font-weight="700" fill="var(--hot)" font-family="system-ui, sans-serif">${a.label}</text>`;
-    });
-    return `<svg viewBox="0 0 ${Wf.toFixed(0)} ${Hf.toFixed(0)}" style="max-width:${Math.round(Wf * 1.9)}px;margin-inline:auto" role="img" aria-label="${(step.titolo || "").replace(/"/g, "")}">${o}</svg>`;
-  }
-
-  window.Fig = { scene, figure, P, fr, mirror, hang, quad, wgs, cossackL, STD, WARN };
+  window.Fig = { figure, P, fr, mirror, hang, quad, wgs, cossackL, STD, WARN };
 })();

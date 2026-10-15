@@ -214,9 +214,6 @@ button.link { font: inherit; background: none; border: 0; color: var(--muted); t
 .belt-me.setup b { color: var(--ink); }
 
 /* ---------- schede tecnica ---------- */
-.steps-grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 440px), 1fr)); }
-.card.step h3 { font-size: 1.15rem; }
-.card.step .fig svg { background: var(--bg); border-radius: 8px; }
 .know { display: flex; gap: 10px; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; font-weight: 600; }
 .know input { width: 20px; height: 20px; }
 .catsec { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
@@ -224,9 +221,15 @@ button.link { font: inherit; background: none; border: 0; color: var(--muted); t
 .catsec summary::-webkit-details-marker { display: none; }
 .catsec summary em { margin-left: auto; font-style: normal; font-family: var(--body); font-size: .78rem; color: var(--muted); font-weight: 500; }
 .catlist { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; padding: 0 12px 12px; }
-.tcard { display: grid; gap: 1px; align-content: start; text-align: left; font: inherit; text-decoration: none; color: var(--ink); background: var(--accent-soft); border: 1px solid var(--accent); border-radius: 8px; padding: 9px 10px; }
+.tcard { display: grid; gap: 1px; align-content: start; text-decoration: none; color: var(--ink); background: var(--accent-soft); border: 1px solid var(--accent); border-radius: 8px; padding: 9px 10px; }
 .tcard b { font-size: .9rem; }
 .tcard span { color: var(--muted); font-size: .8rem; min-height: 1em; }
 .tcard em { font-style: normal; font-size: .68rem; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); font-weight: 700; }
-.tcard.soon { background: var(--surface); border-color: var(--line); cursor: pointer; }
+.tcard.soon { background: var(--surface); border-color: var(--line); }
 .tcard.soon em { color: var(--muted); }
+.yt { position: relative; aspect-ratio: 16 / 9; border-radius: 10px; overflow: hidden; background: #0d1116; }
+.yt iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.yt-play { position: absolute; inset: 0; width: 100%; display: grid; place-content: center; justify-items: center; gap: 6px; font: inherit; color: #fff; background: linear-gradient(135deg, #1f4b9c, #0d1116); border: 0; cursor: pointer; padding: 16px; text-align: center; }
+.yt-ico { width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; background: rgba(255, 255, 255, .16); font-size: 1.5rem; }
+.yt-play small { opacity: .8; }
+.sheet-box .btn { justify-self: start; text-decoration: none; margin-top: 6px; }

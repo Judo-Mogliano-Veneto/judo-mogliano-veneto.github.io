@@ -93,7 +93,7 @@
       }
       this.el.querySelector(".sheet-box").innerHTML = `<button type="button" class="x" aria-label="Chiudi">×</button>
         <div class="eyebrow">${esc(g.cat || "")}</div><h3>${esc(g.t)}</h3>${g.jp ? `<div class="jp">${esc(g.jp)}</div>` : ""}
-        <p>${rich(g.d)}</p>${g.n ? `<p class="small">${rich(g.n)}</p>` : ""}`;
+        <p>${rich(g.d)}</p>${g.n ? `<p class="small">${rich(g.n)}</p>` : ""}${/^(Proiezioni|Immobilizzazioni|Strangolamenti|Leve)/.test(g.cat || "") ? `<a class="btn" href="#/tecniche/${esc(norm(g.t))}">Apri la tecnica e il video</a>` : ""}`;
       this.el.querySelector(".x").addEventListener("click", () => this.close());
       this.el.classList.add("on");
     },

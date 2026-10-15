@@ -10,6 +10,8 @@
   const iso = d => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
   const fmt = s => { const [y, m, d] = s.split("-").map(Number); return `${d} ${MESI[m - 1]} ${y}`; };
 
+  // codice del video da un link YouTube (watch?v=, youtu.be/, shorts/, embed/) o dal codice stesso
+  const ytId = s => { const m = String(s).trim().match(/(?:v=|youtu\.be\/|shorts\/|embed\/)([\w-]{11})|^([\w-]{11})$/); return m ? (m[1] || m[2]) : ""; };
   const json = (k, fallback) => { try { return JSON.parse(store.get(k)) || fallback; } catch (e) { return fallback; } };
 
   const head = (eyebrow, title, lead, back) => `<header>${back ? `<a class="back" href="${esc(back[0])}">‹ ${esc(back[1])}</a>` : ""}${eyebrow ? `<div class="eyebrow">${esc(eyebrow)}</div>` : ""}<h1>${esc(title)}</h1>${lead ? `<p class="lead">${rich(lead)}</p>` : ""}</header>`;
@@ -97,13 +99,14 @@
     const I = window.INFO;
     app.innerHTML = head("Informazioni", "Crediti e note legali", "", ["#/", "Home"]) + `<div class="stack">
       ${block({ type: "callout", tone: "info", title: "Ideata e realizzata da " + I.autore, text: `Progetto, contenuti e coordinamento: **${I.autore}** (${I.account}). L'app è stata sviluppata con l'assistenza di Claude (Anthropic). Versione ${I.versione}. Codice: ${I.repo}` })}
-      <h3 class="sub">Privacy</h3>${block({ type: "text", text: "L'app **non raccoglie dati**, non usa cookie né statistiche e non ha account. Profilo, spunte, diario e movimenti aggiunti restano nella memoria del tuo telefono e si cancellano se cancelli i dati del sito." })}
+      <h3 class="sub">Privacy</h3>${block({ type: "text", text: "L'app **non raccoglie dati**, non usa cookie né statistiche e non ha account. Profilo, spunte, diario e movimenti aggiunti restano nella memoria del tuo telefono e si cancellano se cancelli i dati del sito. I video si caricano da YouTube (modalità senza cookie di tracciamento, youtube-nocookie.com) solo quando tocchi «Guarda il video»." })}
       <h3 class="sub">Fonti</h3>${block({ type: "list", items: [
         "Programmi di cintura del dojo di Mogliano Veneto (Judo e Ju Jitsu), secondo i programmi FIJLKAM",
         "«Aggiornamento del Regolamento delle competizioni di Judo 2025–2028» (IJF Technical Seminar, Istanbul 2024)",
         "Dispensa «I Kata di Judo» a cura del M° Daniele Mainenti, 6° dan (edizione 2023)",
         "«Programma fondamentali Ju Jitsu» FIJLKAM",
-        "Nozioni generali sul judo di tradizione Kodokan"] })}
+        "Nozioni generali sul judo di tradizione Kodokan",
+        "Video delle tecniche: canale YouTube ufficiale del Kodokan (elenco «Names of Judo Techniques» su kdkjd.org), incorporati senza modifiche"] })}
       <p class="small">I marchi, i nomi e i documenti citati appartengono ai rispettivi titolari (FIJLKAM, IJF, Kodokan). Qui compaiono solo riassunti a scopo di studio personale e non c'è alcuna affiliazione ufficiale.</p>
       <h3 class="sub">Avvertenze</h3>${block({ type: "callout", tone: "warn", items: [
         "Le informazioni di judo sono un ripasso: per esami e gare vale quello che insegna il maestro e il regolamento ufficiale in vigore.",
@@ -135,7 +138,7 @@
     const draw = () => {
       const cat = app.querySelector("#fcat").value, s = norm(app.querySelector("#fq").value);
       const list = allClasse().filter(v => (!cat || v.cat === cat) && (!s || norm(v.nome + (v.note || "") + (v.tag || []).join("")).includes(s)));
-      app.querySelector("#list").innerHTML = list.length ? list.map(v => `<article class="card"><div class="top"><h3>${esc(v.nome)}</h3><span class="dose">${esc(v.cat)}</span></div>${v.data ? `<div class="load">${esc(fmt(v.data))}</div>` : ""}${v.note ? `<p>${rich(v.note)}</p>` : ""}${v.tag && v.tag.length ? `<div class="chips">${v.tag.map(t => `<span class="chip">${esc(t)}</span>`).join("")}</div>` : ""}${v.fissa ? "" : `<button type="button" class="link" data-del="${esc(v.id)}">Elimina</button>`}</article>`).join("") : `<div class="callout"><b>Ancora niente qui</b><p>Dopo la lezione aggiungi quello che hai fatto: il nome del movimento e due righe di appunti.</p></div>`;
+      app.querySelector("#list").innerHTML = list.length ? list.map(v => `<article class="card"><div class="top"><h3>${esc(v.nome)}</h3><span class="dose">${esc(v.cat)}</span></div>${v.data ? `<div class="load">${esc(fmt(v.data))}</div>` : ""}${v.note ? `<p>${rich(v.note)}</p>` : ""}${v.video ? videoBox(v.video, v.nome).replace("Guarda il video del Kodokan", "Guarda il video") : ""}${v.tag && v.tag.length ? `<div class="chips">${v.tag.map(t => `<span class="chip">${esc(t)}</span>`).join("")}</div>` : ""}${v.fissa ? "" : `<button type="button" class="link" data-del="${esc(v.id)}">Elimina</button>`}</article>`).join("") : `<div class="callout"><b>Ancora niente qui</b><p>Dopo la lezione aggiungi quello che hai fatto: il nome del movimento e due righe di appunti.</p></div>`;
       app.querySelectorAll("[data-del]").forEach(b => b.addEventListener("click", () => {
         store.set("classe", JSON.stringify(json("classe", []).filter(v => v.id !== b.dataset.del))); draw();
       }));
@@ -146,21 +149,22 @@
         <label>Categoria<select name="cat">${L.categorie.map(c => `<option>${esc(c)}</option>`).join("")}</select></label>
         <label>Movimento<input name="nome" required maxlength="120" placeholder="es. Uchi mata dopo ko uchi gari"></label>
         <label>Appunti<textarea name="note" rows="3" maxlength="800" placeholder="Cosa curare, errori, come ha spiegato il maestro"></textarea></label>
+        <label>Video YouTube (facoltativo)<input name="video" inputmode="url" placeholder="Link del video, anche girato in dojo e caricato come «non in elenco»"></label>
         <button type="submit" class="btn">Aggiungi</button></form>
       <div class="filters"><input id="fq" type="search" placeholder="Cerca nei movimenti" aria-label="Cerca nei movimenti"><select id="fcat" aria-label="Filtra per categoria"><option value="">Tutte le categorie</option>${L.categorie.map(c => `<option>${esc(c)}</option>`).join("")}</select></div>
       <div id="list" class="stack"></div>
       <p><button type="button" class="btn ghost" id="exp">Esporta per lezione.js</button> <span class="small" id="expmsg"></span></p>`;
     app.querySelector("#f").addEventListener("submit", e => {
       e.preventDefault();
-      const f = new FormData(e.target), v = { id: String(Date.now()), data: f.get("data"), cat: f.get("cat"), nome: f.get("nome").trim(), note: f.get("note").trim() };
+      const f = new FormData(e.target), v = { id: String(Date.now()), data: f.get("data"), cat: f.get("cat"), nome: f.get("nome").trim(), note: f.get("note").trim(), video: ytId(f.get("video") || "") };
       if (!v.nome) return;
       store.set("classe", JSON.stringify([...json("classe", []), v]));
-      e.target.nome.value = ""; e.target.note.value = ""; draw();
+      e.target.nome.value = ""; e.target.note.value = ""; e.target.video.value = ""; draw();
     });
     app.querySelector("#fq").addEventListener("input", draw);
     app.querySelector("#fcat").addEventListener("change", draw);
     app.querySelector("#exp").addEventListener("click", () => {
-      const txt = json("classe", []).map(v => `    { data: ${JSON.stringify(v.data)}, cat: ${JSON.stringify(v.cat)}, nome: ${JSON.stringify(v.nome)}, note: ${JSON.stringify(v.note || "")} },`).join("\n");
+      const txt = json("classe", []).map(v => `    { data: ${JSON.stringify(v.data)}, cat: ${JSON.stringify(v.cat)}, nome: ${JSON.stringify(v.nome)}, note: ${JSON.stringify(v.note || "")}${v.video ? `, video: ${JSON.stringify(v.video)}` : ""} },`).join("\n");
       const msg = app.querySelector("#expmsg");
       if (!txt) { msg.textContent = "Niente da esportare."; return; }
       (navigator.clipboard ? navigator.clipboard.writeText(txt) : Promise.reject()).then(() => { msg.textContent = "Copiato negli appunti."; }, () => { msg.textContent = "Copia non riuscita."; });
@@ -234,56 +238,63 @@
   }
 
 
-  /* ---------- Tecniche (schede passo per passo) ---------- */
-  const TE = window.TECNICHE;
+  /* ---------- Tecniche: una pagina per ogni tecnica, con video Kodokan e scheda passo per passo dove c'è ---------- */
+  const TE = window.TECNICHE, V = window.VIDEO || {}, VA = window.VIDEO_ALIAS || {};
   const CATALOGO = [["Proiezioni · 1° kyo", "Gokyo · 1° kyo"], ["Proiezioni · 2° kyo", "Gokyo · 2° kyo"], ["Proiezioni · 3° kyo", "Gokyo · 3° kyo"], ["Proiezioni · 4° kyo", "Gokyo · 4° kyo"], ["Proiezioni · 5° kyo", "Gokyo · 5° kyo"], ["Immobilizzazioni", "Immobilizzazioni"], ["Strangolamenti", "Strangolamenti"], ["Leve", "Leve articolari"]];
+  const VN = {}; Object.keys(V).forEach(k => { VN[norm(k)] = V[k]; });
+  const videoDi = name => VN[norm(VA[name] || name)] || VN[norm(String(name).replace(/shio/i, "shiho"))] || null;
   const guidaDi = g => TE.find(t => norm(t.nome) === norm(g.t));
+  const voci = () => G.filter(g => CATALOGO.some(c => c[0] === g.cat) && !/^(Seoi nage|Morote)/.test(g.t));
+  const videoBox = (id, name) => id ? `<div class="yt" data-yt="${esc(id)}"><button type="button" class="yt-play" aria-label="Guarda il video di ${esc(name)}"><span class="yt-ico">▶</span><b>Guarda il video del Kodokan</b><small>Si carica qui solo quando tocchi. Serve la rete.</small></button></div><p class="small"><a href="https://www.youtube.com/watch?v=${esc(id)}" target="_blank" rel="noopener noreferrer">Apri su YouTube ↗</a></p>` : `<div class="callout"><b>Video non disponibile</b><p>Il Kodokan non ha un video di questa tecnica nel suo elenco. Si può aggiungere in <code>video.js</code>.</p></div>`;
+  // il video vero si carica solo al tocco (niente traffico e niente YouTube finché non serve)
+  app.addEventListener("click", e => {
+    const b = e.target.closest && e.target.closest(".yt-play");
+    if (!b) return;
+    const box = b.parentElement, id = box.dataset.yt;
+    if (!navigator.onLine) { b.querySelector("small").textContent = "Sei offline: il video si vede solo con la rete."; return; }
+    box.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?autoplay=1&rel=0&playsinline=1" title="Video del Kodokan" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
+  });
   function tecniche() {
-    const voci = G.filter(g => CATALOGO.some(c => c[0] === g.cat) && !/^(Seoi nage|Morote)/.test(g.t));
-    const pronte = voci.filter(guidaDi).length;
-    app.innerHTML = head("Tecniche", "Tecniche passo per passo", `Ogni scheda ha presa, passi, errori comuni, esercizi e video. Sono pronte **${pronte}** schede su ${voci.length}: le altre arrivano a gruppi. Il disegno è schematico: per le prese precise guarda il video e chiedi al maestro.`) + `
+    const all = voci(), pronte = all.filter(guidaDi).length, conVideo = all.filter(g => videoDi(g.t)).length;
+    app.innerHTML = head("Tecniche", "Tecniche", `Ogni tecnica ha la sua pagina con significato e **video ufficiale del Kodokan** (${conVideo} su ${all.length}). Le schede passo per passo sono pronte per **${pronte}** tecniche e arrivano a gruppi.`) + `
       <div class="search"><input id="tq" type="search" placeholder="Cerca una tecnica" autocomplete="off" aria-label="Cerca una tecnica"></div>
       <div id="cat" class="stack"></div>`;
     const draw = () => {
       const q = norm(app.querySelector("#tq").value);
-      app.querySelector("#cat").innerHTML = CATALOGO.map(([cat, titolo]) => {
-        const list = voci.filter(g => g.cat === cat && (!q || norm(g.t).includes(q)));
+      app.querySelector("#cat").innerHTML = CATALOGO.map(([cat, titolo], ci) => {
+        const list = all.filter(g => g.cat === cat && (!q || norm(g.t).includes(q)));
         if (!list.length) return "";
-        const ok = list.filter(guidaDi).length;
-        return `<details class="catsec" ${q || ok ? "open" : ""}><summary>${esc(titolo)} <em>${ok}/${list.length}</em></summary><div class="catlist">${list.map(g => {
-          const t = guidaDi(g);
-          return t ? `<a class="tcard" href="#/tecniche/${esc(t.id)}"><b>${esc(g.t)}</b><span>${esc(g.jp || "")}</span><em>scheda pronta</em></a>` : `<button type="button" class="tcard soon chip-open" data-term="${esc(norm(g.t))}"><b>${esc(g.t)}</b><span>${esc(g.jp || "")}</span><em>in arrivo</em></button>`;
+        return `<details class="catsec" ${q || ci === 0 ? "open" : ""}><summary>${esc(titolo)} <em>${list.length}</em></summary><div class="catlist">${list.map(g => {
+          const full = guidaDi(g), v = videoDi(g.t);
+          return `<a class="tcard${full ? "" : " soon"}" href="#/tecniche/${esc(norm(g.t))}"><b>${esc(g.t)}</b><span>${esc(g.jp || "")}</span><em>${full ? "scheda + video" : v ? "video" : "significato"}</em></a>`;
         }).join("")}</div></details>`;
       }).join("");
-      app.querySelectorAll(".chip-open").forEach(b => b.addEventListener("click", () => window.R.sheet.open(G.find(g => norm(g.t) === b.dataset.term))));
     };
     app.querySelector("#tq").addEventListener("input", draw);
     draw();
   }
   const ul = items => `<div class="card"><ul>${items.map(i => `<li>${rich(i)}</li>`).join("")}</ul></div>`;
-  function tecnica(id) {
-    const t = TE.find(x => x.id === id);
-    if (!t) return notFound();
-    const g = G.find(x => norm(x.t) === norm(t.nome));
-    const steps = t.passi.map((p, i) => {
-      let fig = "";
-      if (p.tori) { try { fig = window.Fig.scene(p); } catch (e) { console.warn(t.nome, e); } }
-      return `<article class="card step">${fig ? `<div class="fig">${fig}</div>` : ""}<h3><span class="num">${i + 1}</span>${esc(p.titolo)}</h3><p>${rich(p.testo)}</p></article>`;
-    }).join("");
-    const video = t.video.map(v => `<a class="tile" href="https://www.youtube.com/results?search_query=${encodeURIComponent(v.q)}" target="_blank" rel="noopener noreferrer"><b>${esc(v.label)}</b><span>Cerca su YouTube ↗</span></a>`).join("");
-    app.innerHTML = head(`${t.gruppo}${t.kyo ? " · " + t.kyo : ""}`, t.nome, `${g && g.jp ? g.jp + " · " : ""}${t.sign}`, ["#/tecniche", "Tecniche"]) + `
-      <div class="stack">
-        <label class="know"><input type="checkbox" data-key="sa:${esc(t.id)}"> La so fare</label>
-        <div class="card"><b>Quando si usa</b><p>${rich(t.quando)}</p><b>Presa</b><p>${rich(t.presa)}</p></div>
-        <h3 class="sub">I passi</h3><div class="steps-grid">${steps}</div>
-        ${t.nota ? block({ type: "callout", tone: "info", title: "Disegno", text: t.nota }) : block({ type: "callout", tone: "info", title: "Disegno schematico", text: "Tori è in blu, uke in bianco, visti di lato. Servono a ricordare la sequenza: le prese e gli angoli precisi si vedono nel video." })}
+  function tecnica(slug) {
+    const g = G.find(x => norm(x.t) === slug) || G.find(x => norm(x.t) === norm(slug));
+    const t = TE.find(x => norm(x.nome) === slug || x.id === slug);
+    if (!g && !t) return notFound();
+    const nome = t ? t.nome : g.t, vid = videoDi(nome);
+    const sign = t ? t.sign : g.d;
+    const gruppo = t ? `${t.gruppo}${t.kyo ? " · " + t.kyo : ""}` : g.cat;
+    let body = `<label class="know"><input type="checkbox" data-key="sa:${esc(norm(nome))}"> La so fare</label>
+      <h3 class="sub">Video</h3>${videoBox(vid, nome)}`;
+    if (t) {
+      body += `<div class="card"><b>Quando si usa</b><p>${rich(t.quando)}</p><b>Presa</b><p>${rich(t.presa)}</p></div>
+        <h3 class="sub">I passi</h3>${block({ type: "steps", items: t.passi.map(p => ({ title: p.titolo, text: p.testo })) })}
         <h3 class="sub">Errori comuni</h3>${ul(t.errori)}
         <h3 class="sub">Come allenarla</h3>${ul(t.uchikomi)}
         <h3 class="sub">Collegamenti</h3>${ul(t.collegamenti)}
         ${block({ type: "callout", tone: "warn", title: "Sicurezza", text: t.sicurezza })}
-        <h3 class="sub">Video</h3><div class="menu">${video}</div>
-        <p class="small">Scheda versione 1: scritta dai programmi e dalla tradizione del judo, da confrontare con ciò che spiega il maestro.</p>
-      </div>`;
+        <p class="small">Scheda versione 1, scritta per chi usa la presa destra: da confrontare con ciò che spiega il maestro.</p>`;
+    } else {
+      body += `${g.n ? `<p class="small">${rich(g.n)}</p>` : ""}<div class="callout"><b>Scheda passo per passo in arrivo</b><p>Per ora c'è il significato e il video. Presa, passi, errori ed esercizi arrivano a gruppi.</p></div>`;
+    }
+    app.innerHTML = head(gruppo, nome, `${g && g.jp ? g.jp + " · " : ""}${sign}`, ["#/tecniche", "Tecniche"]) + `<div class="stack">${body}</div>`;
   }
 
   /* ---------- Glossario ---------- */

@@ -15,7 +15,8 @@ App web installabile su iPhone per il judo: teoria, allenamenti, programmi di ci
 | `cinture.js` | programmi per cintura, stato («in cantiere» / «definito»), cintura attuale |
 | `lezione.js` | movimenti visti a lezione (si possono anche aggiungere dall'app, sul telefono) |
 | `teoria.js` | pagine di teoria |
-| `tecniche.js` | schede tecnica passo per passo (testi, pose dei disegni, video) |
+| `tecniche.js` | schede tecnica passo per passo (testi) |
+| `video.js` | codici dei video YouTube: quelli ufficiali del Kodokan e quelli che aggiungi tu |
 | `glossario.js` | termini e significati |
 | `dojo.js` | orari, palestra, eventi |
 | `content.js`, `exercises.js` | programma post-LASIK e esercizi |
@@ -34,6 +35,7 @@ Dopo una modifica GitHub Pages pubblica in uno o due minuti. Apri l'app con la r
 Spunte, diario, movimenti aggiunti e test restano salvati sul telefono.
 
 ## Fonti
+Video delle tecniche: canale YouTube ufficiale del Kodokan (elenco su kdkjd.org).
 Programmi di cintura FIJLKAM del dojo (Judo e Ju Jitsu), «Aggiornamento del Regolamento IJF 2025–2028», dispensa «I Kata di Judo» (M° Mainenti), «Programma fondamentali Ju Jitsu FIJLKAM».
 
 ## Autore e licenza
