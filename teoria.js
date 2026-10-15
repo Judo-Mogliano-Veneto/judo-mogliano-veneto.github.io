@@ -72,7 +72,7 @@ window.TEORIA = [
     id: "classificazione", title: "Come si dividono le tecniche", text: "Nage waza, katame waza, atemi waza",
     blocks: [
       { type: "text", text: "Le tecniche del judo (**waza**) si dividono in tre grandi famiglie. Nelle gare si usano le prime due. I numeri sono quelli dell'elenco ufficiale del Kodokan: 68 proiezioni e 32 controlli, cento tecniche in tutto." },
-      { type: "links", items: [{ href: "#/teoria/domande", label: "Domanda d'esame: come si suddividono le tecniche", text: "Risposta da dire, schema e confusioni da evitare" }] },
+      { type: "links", items: [{ href: "#/teoria/domande", label: "Domanda d'esame: come si suddividono le tecniche", text: "Sintesi, schema e confusioni da evitare" }] },
       { type: "tree", items: [
         { label: "Nage waza", text: "tecniche di proiezione", children: [
           { label: "Tachi waza", text: "in piedi", children: [
@@ -239,9 +239,9 @@ window.TEORIA = [
     ]
   },
   {
-    id: "domande", title: "Domande d'esame · teoria", text: "Le domande dei programmi, con la risposta da dire e la spiegazione",
+    id: "domande", title: "Domande d'esame · teoria", text: "Le domande dei programmi, con la sintesi e la spiegazione",
     blocks: [
-      { type: "text", text: "Ogni domanda ha tre parti: la **risposta da dire** all'esame (breve, da imparare quasi a memoria), la **spiegazione** per capirla davvero e un **gancio** per ricordarla. Le risposte vanno sempre **confrontate con quello che spiega il maestro**." },
+      { type: "text", text: "Ogni domanda ha tre parti: la **risposta in sintesi**, la **spiegazione** per capirla a fondo e uno spunto **per ricordarla**. Le risposte vanno sempre **confrontate con quello che spiega il maestro**." },
       { type: "table", head: ["Domanda", "Nei programmi degli anni scorsi"], rows: [
         ["1–4 · Storia, origine, significato, principi", "Dalla gialla in su"],
         ["5 · Le tre fasi di una tecnica", "Dall'arancione in su"],
@@ -250,41 +250,41 @@ window.TEORIA = [
       ] },
       { type: "accordion", items: [
         { title: "1 · Quando nasce il Judo? Chi è il fondatore?", blocks: [
-          { type: "callout", tone: "info", title: "Risposta da dire", text: "Il judo nasce nel **1882** a **Tokyo**, quando **Jigoro Kano** fonda il **Kodokan**, «il luogo in cui si studia la via»." },
+          { type: "callout", tone: "info", title: "In sintesi", text: "Il judo nasce nel **1882** a **Tokyo**, quando **Jigoro Kano** fonda il **Kodokan**, «il luogo in cui si studia la via»." },
           { type: "h", text: "Spiegata bene" },
           { type: "text", text: "**Jigoro Kano** (1860–1938) era un ragazzo esile che iniziò il ju jitsu per difendersi dai bulli. Studiò più scuole, ne prese il meglio e tolse le tecniche pericolose. Nel 1882 aprì il Kodokan in un piccolo spazio presso un tempio buddista di Tokyo (l'Eisho-ji), con pochi allievi. Era un educatore: per lui il judo era un metodo per formare il corpo, la mente e il carattere, non solo per combattere." },
           { type: "table", head: ["Anno", "Fatto"], rows: [["1860", "Nasce Jigoro Kano"], ["1882", "Fonda il Kodokan a Tokyo: nasce il judo"], ["1938", "Muore Kano"], ["1964", "Il judo entra alle Olimpiadi (Tokyo)"]] },
-          { type: "callout", title: "Gancio", text: "**18-82**: «Kano a 22 anni apre il Kodokan». Nato nel 1860, nel 1882 aveva 22 anni." }
+          { type: "callout", title: "Per ricordarla", text: "**18-82**: «Kano a 22 anni apre il Kodokan». Nato nel 1860, nel 1882 aveva 22 anni." }
         ] },
         { title: "2 · Da dove deriva il Judo?", blocks: [
-          { type: "callout", tone: "info", title: "Risposta da dire", text: "Dal **ju jitsu**, l'arte di combattimento dei samurai. Kano studiò soprattutto due scuole, la **Tenshin shin'yo ryu** e la **Kito ryu**, tolse le tecniche pericolose e le riordinò in un metodo educativo: il judo." },
+          { type: "callout", tone: "info", title: "In sintesi", text: "Dal **ju jitsu**, l'arte di combattimento dei samurai. Kano studiò soprattutto due scuole, la **Tenshin shin'yo ryu** e la **Kito ryu**, tolse le tecniche pericolose e le riordinò in un metodo educativo: il judo." },
           { type: "h", text: "Spiegata bene" },
           { type: "table", head: ["Scuola", "Cosa ha dato al judo"], rows: [
             ["Tenshin shin'yo ryu", "Controlli a terra, strangolamenti, leve e colpi: base del **Katame no kata** e del Kime no kata"],
             ["Kito ryu", "Proiezioni e uso dello squilibrio: base del **Nage no kata** e del Koshiki no kata"]
           ] },
           { type: "text", text: "Le due grandi novità di Kano: il **randori** (combattimento libero di allenamento, possibile solo perché le tecniche pericolose erano state tolte) e l'idea che il judo serva a **educare** la persona." },
-          { type: "callout", title: "Gancio", text: "**Ju jitsu = arte** (jitsu, tecnica) · **Ju do = via** (do, percorso di vita). Kano passa dall'arte di combattere alla via per crescere." }
+          { type: "callout", title: "Per ricordarla", text: "**Ju jitsu = arte** (jitsu, tecnica) · **Ju do = via** (do, percorso di vita). Kano passa dall'arte di combattere alla via per crescere." }
         ] },
         { title: "3 · Cosa significa la parola Judo?", blocks: [
-          { type: "callout", tone: "info", title: "Risposta da dire", text: "«**Via della cedevolezza**»: **ju** = cedevole, flessibile; **do** = via." },
+          { type: "callout", tone: "info", title: "In sintesi", text: "«**Via della cedevolezza**»: **ju** = cedevole, flessibile; **do** = via." },
           { type: "h", text: "Spiegata bene" },
           { type: "text", text: "**Cedevolezza** non vuol dire debolezza: vuol dire non opporsi alla forza con la forza. Se l'avversario spinge, si cede e si usa la sua spinta; se tira, si entra. **Do** indica che non è solo una tecnica ma un percorso che dura tutta la vita (come in kara-**do**, ken-**do**, aiki-**do**)." },
           { type: "table", head: ["Parola", "Significato"], rows: [["Ju", "Cedevole, flessibile"], ["Do", "Via, percorso"], ["Jitsu (jutsu)", "Arte, tecnica"], ["Kodokan", "Luogo in cui si studia la via"], ["Judoka", "Chi pratica il judo"]] },
-          { type: "callout", title: "Gancio", text: "La canna di bambù sotto la neve: si piega, la neve scivola via, e lei torna dritta. Il ramo rigido invece si spezza." }
+          { type: "callout", title: "Per ricordarla", text: "La canna di bambù sotto la neve: si piega, la neve scivola via, e lei torna dritta. Il ramo rigido invece si spezza." }
         ] },
         { title: "4 · Quali sono i principi del Judo?", blocks: [
-          { type: "callout", tone: "info", title: "Risposta da dire", text: "Due principi: **Seiryoku zen'yo**, «massima efficienza con il minimo sforzo», e **Jita kyoei**, «tutti insieme per progredire» (prosperità e benessere reciproci). Alla base c'è l'idea che la cedevolezza vince la forza." },
+          { type: "callout", tone: "info", title: "In sintesi", text: "Due principi: **Seiryoku zen'yo**, «massima efficienza con il minimo sforzo», e **Jita kyoei**, «tutti insieme per progredire» (prosperità e benessere reciproci). Alla base c'è l'idea che la cedevolezza vince la forza." },
           { type: "h", text: "Spiegata bene" },
           { type: "cards", items: [
             { title: "Seiryoku zen'yo", sub: "Il miglior uso dell'energia", text: "Sul tatami: squilibrio prima di proiettare, timing, leve del corpo invece della forza bruta. Fuori: usare bene tempo ed energie nello studio e nel lavoro." },
             { title: "Jita kyoei", sub: "Io e te cresciamo insieme", text: "Uke non è un nemico: senza di lui tori non impara. Si cade bene per far allenare il compagno, si proietta con controllo per non fargli male. Vale anche fuori dal dojo, nella società." }
           ] },
           { type: "text", text: "Il primo è il principio **tecnico**, il secondo quello **morale**: insieme fanno del judo un metodo di educazione." },
-          { type: "callout", title: "Gancio", text: "**Zen'yo = il meglio di me · Kyoei = il meglio di noi.**" }
+          { type: "callout", title: "Per ricordarla", text: "**Zen'yo = il meglio di me · Kyoei = il meglio di noi.**" }
         ] },
         { title: "5 · Quali sono le tre fasi di esecuzione di una tecnica?", blocks: [
-          { type: "callout", tone: "info", title: "Risposta da dire", text: "**Kuzushi**, lo squilibrio di uke; **tsukuri**, la preparazione o entrata di tori; **kake**, l'esecuzione che porta a proiettare." },
+          { type: "callout", tone: "info", title: "In sintesi", text: "**Kuzushi**, lo squilibrio di uke; **tsukuri**, la preparazione o entrata di tori; **kake**, l'esecuzione che porta a proiettare." },
           { type: "h", text: "Spiegata bene, con o soto gari" },
           { type: "steps", items: [
             { title: "Kuzushi · squilibrio", text: "Con le prese tori porta il peso di uke su un punto debole: in o soto gari sul tallone destro, all'indietro. Senza squilibrio la tecnica si fa solo di forza." },
@@ -292,10 +292,10 @@ window.TEORIA = [
             { title: "Kake · esecuzione", text: "La gamba destra falcia, le braccia completano: uke cade sulla schiena, tori lo accompagna tenendo la manica." }
           ] },
           { type: "text", text: "Le direzioni di squilibrio sono otto (**happo no kuzushi**): avanti, dietro, destra, sinistra e le quattro diagonali. Nelle tecniche fatte bene le tre fasi sono un unico gesto continuo: per questo si ripetono gli **uchi komi** (entrate senza proiettare)." },
-          { type: "callout", title: "Gancio", text: "**Rompo · Entro · Lancio** (kuzushi · tsukuri · kake)." }
+          { type: "callout", title: "Per ricordarla", text: "**Rompo · Entro · Lancio** (kuzushi · tsukuri · kake)." }
         ] },
         { title: "6 · Come si suddividono le tecniche di Judo?", blocks: [
-          { type: "callout", tone: "info", title: "Risposta da dire", text: "In tre gruppi: **nage waza**, le proiezioni; **katame waza**, le tecniche di controllo; **atemi waza**, le percussioni, che non si usano in gara. Le nage waza si dividono in **tachi waza** (tori resta in piedi: te waza, koshi waza, ashi waza) e **sutemi waza** (tori si sacrifica a terra: ma sutemi waza sulla schiena, yoko sutemi waza sul fianco). Le katame waza si dividono in **osaekomi waza** (immobilizzazioni), **shime waza** (strangolamenti) e **kansetsu waza** (leve articolari)." },
+          { type: "callout", tone: "info", title: "In sintesi", text: "In tre gruppi: **nage waza**, le proiezioni; **katame waza**, le tecniche di controllo; **atemi waza**, le percussioni, che non si usano in gara. Le nage waza si dividono in **tachi waza** (tori resta in piedi: te waza, koshi waza, ashi waza) e **sutemi waza** (tori si sacrifica a terra: ma sutemi waza sulla schiena, yoko sutemi waza sul fianco). Le katame waza si dividono in **osaekomi waza** (immobilizzazioni), **shime waza** (strangolamenti) e **kansetsu waza** (leve articolari)." },
           { type: "h", text: "Lo schema" },
           { type: "tree", items: [
             { label: "Nage waza", text: "proiezioni · nage = lanciare", children: [
@@ -328,11 +328,11 @@ window.TEORIA = [
             "**Il gruppo dipende da cosa lavora di più**, non da cosa tocca: seoi nage tocca anche l'anca, ma è te waza perché il lavoro principale è delle braccia e delle spalle.",
             "**Il Gokyo** (40 proiezioni in 5 gruppi) è un altro modo di ordinare le tecniche: per difficoltà di apprendimento, non per parte del corpo."
           ] },
-          { type: "callout", title: "Gancio", text: "**Lancio · Blocco · Colpisco** (nage · katame · atemi). Poi chiediti: tori resta in piedi o va a terra? Se va a terra, sulla schiena o sul fianco? Se resta in piedi, lavorano braccia, anca o gambe?" },
+          { type: "callout", title: "Per ricordarla", text: "**Lancio · Blocco · Colpisco** (nage · katame · atemi). Poi chiediti: tori resta in piedi o va a terra? Se va a terra, sulla schiena o sul fianco? Se resta in piedi, lavorano braccia, anca o gambe?" },
           { type: "links", items: [{ href: "#/teoria/classificazione", label: "Pagina «Come si dividono le tecniche»" }, { href: "#/tecniche", label: "Catalogo delle tecniche", text: "Ordinato per gruppo, con video" }] }
         ] },
         { title: "7 · Come funziona l'arbitraggio nel Judo? (marrone)", blocks: [
-          { type: "callout", tone: "info", title: "Risposta da dire", text: "Sul tatami c'è un **arbitro**, aiutato da due **giudici** al tavolo con il video (sistema CARE). L'arbitro dà i punti (**ippon**, **waza-ari**, **yuko**), conta le immobilizzazioni (**osaekomi**: 20 s ippon, 10–19 waza-ari, 5–9 yuko) e dà le penalità (**shido**; con 3 shido o un fallo grave si perde: **hansoku make**). I comandi principali sono **hajime** (iniziate), **matte** (fermi), **osaekomi**/**toketa** (immobilizzazione iniziata/finita), **sore made** (fine)." },
+          { type: "callout", tone: "info", title: "In sintesi", text: "Sul tatami c'è un **arbitro**, aiutato da due **giudici** al tavolo con il video (sistema CARE). L'arbitro dà i punti (**ippon**, **waza-ari**, **yuko**), conta le immobilizzazioni (**osaekomi**: 20 s ippon, 10–19 waza-ari, 5–9 yuko) e dà le penalità (**shido**; con 3 shido o un fallo grave si perde: **hansoku make**). I comandi principali sono **hajime** (iniziate), **matte** (fermi), **osaekomi**/**toketa** (immobilizzazione iniziata/finita), **sore made** (fine)." },
           { type: "h", text: "Spiegata bene" },
           { type: "table", head: ["Comando o gesto", "Significato"], rows: [
             ["Rei", "Saluto"], ["Hajime", "Inizio dell'incontro o ripresa"], ["Matte", "Fermi: si interrompe"], ["Sono mama · Yoshi", "Non muovetevi · riprendete"], ["Osaekomi · Toketa", "Immobilizzazione iniziata · liberata"], ["Ippon · Waza-ari · Yuko", "Punteggi, dal più alto"], ["Shido · Hansoku make", "Penalità · squalifica"], ["Sore made", "Fine dell'incontro"]
@@ -340,7 +340,7 @@ window.TEORIA = [
           { type: "links", items: [{ href: "#/teoria/regole", label: "Regole di gara IJF 2025–2028", text: "Punteggi, penalità e novità in dettaglio" }] }
         ] },
         { title: "8 · Elementi di organizzazione federale (marrone)", blocks: [
-          { type: "callout", tone: "info", title: "Risposta da dire", text: "In Italia il judo fa capo alla **FIJLKAM** (Federazione Italiana Judo Lotta Karate Arti Marziali), riconosciuta dal **CONI**. La federazione è organizzata in **comitati regionali** e raccoglie le **società sportive** affiliate, a cui sono tesserati atleti e tecnici. A livello internazionale il judo fa capo all'**IJF** (International Judo Federation) e in Europa all'**EJU**." },
+          { type: "callout", tone: "info", title: "In sintesi", text: "In Italia il judo fa capo alla **FIJLKAM** (Federazione Italiana Judo Lotta Karate Arti Marziali), riconosciuta dal **CONI**. La federazione è organizzata in **comitati regionali** e raccoglie le **società sportive** affiliate, a cui sono tesserati atleti e tecnici. A livello internazionale il judo fa capo all'**IJF** (International Judo Federation) e in Europa all'**EJU**." },
           { type: "h", text: "Spiegata bene" },
           { type: "tree", items: [
             { label: "IJF", text: "federazione mondiale: regolamento di gara, campionati mondiali", children: [{ label: "EJU", text: "unione europea del judo" }] },

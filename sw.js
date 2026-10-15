@@ -1,6 +1,6 @@
 /* Service worker: la guida funziona anche senza rete.
    Con rete scarica sempre l'ultima versione dei file e la tiene in memoria per l'uso offline. */
-const CACHE = "guida-judo-v10";
+const CACHE = "guida-judo-v11";
 const FILES = ["./", "index.html", "style.css", "glossario.js", "render.js", "figures.js", "exercises.js", "content.js", "teoria.js", "tecniche.js", "pianta.js", "laterale.js", "video.js", "cinture.js", "lezione.js", "dojo.js", "app.js", "manifest.webmanifest",
   "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png"];
 
