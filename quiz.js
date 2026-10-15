@@ -75,7 +75,7 @@
           if (ok) punti++;
           el.querySelectorAll(".quiz-o").forEach(x => { x.disabled = true; const g = d.opz[+x.dataset.k] === d.giusta; x.classList.toggle("ok", g); if (x === b && !g) x.classList.add("no"); });
           const fb = el.querySelector(".quiz-fb");
-          fb.innerHTML = `<p class="${ok ? "ok" : "no"}"><b>${ok ? "Esatto! 🎉" : "Quasi! La risposta giusta è quella in verde."}</b></p><p class="small">${esc(d.spiega)}</p><button type="button" class="btn" data-next>${i + 1 >= dom.length ? "Vedi il risultato" : "Avanti"}</button>`;
+          fb.innerHTML = `<p class="${ok ? "ok" : "no"}"><b>${ok ? "Esatto! 🎉" : "Quasi! La risposta giusta è quella con il ✓ in blu."}</b></p><p class="small">${esc(d.spiega)}</p><button type="button" class="btn" data-next>${i + 1 >= dom.length ? "Vedi il risultato" : "Avanti"}</button>`;
           const n = fb.querySelector("[data-next]"); n.addEventListener("click", () => { i++; mostra(); }); n.focus({preventScroll:true}); n.scrollIntoView({block:"center",behavior:"smooth"});
         }));
       };

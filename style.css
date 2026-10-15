@@ -295,11 +295,13 @@ button.link { font: inherit; background: none; border: 0; color: var(--muted); t
 .quiz-o{font:inherit;font-size:1rem;text-align:left;background:var(--surface);color:var(--ink);border:2px solid var(--line);border-radius:12px;padding:14px;min-height:56px;cursor:pointer}
 .quiz-o:not(:disabled):hover{border-color:var(--accent)}
 .quiz-o:disabled{cursor:default;opacity:.85}
-.quiz-o.ok{border-color:#2a8a4a;background:#e3f4e8;opacity:1;font-weight:600}
-.quiz-o.no{border-color:#c0392b;background:#fbe6e3;opacity:1}
+.quiz-o.ok{border-color:#1f4b9c;background:#e2e9f6;opacity:1;font-weight:600}
+.quiz-o.ok::before{content:"✓ ";font-weight:800;color:#1f4b9c}
+.quiz-o.no{border-color:#c25a00;background:#fdebd9;opacity:1;border-style:dashed}
+.quiz-o.no::before{content:"✗ ";font-weight:800;color:#c25a00}
 .quiz-fb{display:grid;gap:8px;justify-items:start}
 .quiz-fb p{margin:0}
-.quiz .ok{color:#1f6b3a}.quiz .no{color:#a5301f}
+.quiz .ok{color:#1f4b9c}.quiz .no{color:#9a4400}
 .quiz-o.ok,.quiz-o.no{color:var(--ink)}
 .quiz-end{text-align:center;justify-items:center;padding:20px 0}
 .quiz-score{font-size:4rem;font-weight:800;color:var(--accent);line-height:1}
