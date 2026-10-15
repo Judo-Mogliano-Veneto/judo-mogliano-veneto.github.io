@@ -278,10 +278,23 @@
   }
   // passi con lo schema visto dall'alto (pianta.js), tutti alla stessa scala
   const passi = t => {
-    const P = window.Plan, con = t.passi.filter(p => p.pianta);
+    const P = window.Plan, L = window.Side, con = t.passi.filter(p => p.pianta), lat = t.passi.filter(p => p.lato);
     const cr = P && con.length ? P.cornice(con.map(p => p.pianta)) : null;
-    const leg = P && con.length ? `<p class="small plan-key"><b style="color:#2f66c4">Blu = tori</b> · bianco = uke · visto dall'alto. S e D sono i piedi sinistro e destro; contorno tratteggiato = piede sollevato, piede sbiadito = dov'era prima. Punto giallo = presa.</p>` : "";
-    return leg + `<ol class="steps">${t.passi.map(p => `<li><b>${esc(p.titolo)}</b>${P && p.pianta ? `<div class="plan">${P.plan(p.pianta, { cornice: cr })}</div>` : ""}<span>${rich(p.testo)}</span></li>`).join("")}</ol>`;
+    // vista laterale: stessa cornice per tutti i passi, così la scala non cambia
+    let lati = [];
+    if (L && lat.length) {
+      lati = t.passi.map(p => p.lato ? L.scena(p.lato, t.cam) : "");
+      const vb = lati.filter(Boolean).map(x => x.match(/viewBox="([^"]+)"/)[1].split(" ").map(Number));
+      const x0 = Math.min(...vb.map(v => v[0])), y0 = Math.min(...vb.map(v => v[1])), x1 = Math.max(...vb.map(v => v[0] + v[2])), y1 = Math.max(...vb.map(v => v[1] + v[3]));
+      lati = lati.map(x => x.replace(/viewBox="[^"]+"/, `viewBox="${x0} ${y0} ${x1 - x0} ${y1 - y0}"`));
+    }
+    const due = con.length && lat.length;
+    const vista = store.get("vista") === "lato" && lat.length ? "lato" : con.length ? "alto" : "lato";
+    const sel = due ? `<div class="seg" role="group" aria-label="Tipo di disegno"><button type="button" data-vista="alto" aria-pressed="${vista === "alto"}">Vista dall'alto</button><button type="button" data-vista="lato" aria-pressed="${vista === "lato"}">Vista laterale</button></div>` : "";
+    const keyAlto = `<p class="small plan-key"><b style="color:#2f66c4">Blu = tori</b> · bianco = uke · visto dall'alto. S e D sono i piedi sinistro e destro; contorno tratteggiato = piede sollevato, piede sbiadito = dov'era prima. Punto giallo = presa.</p>`;
+    const keyLato = `<p class="small plan-key"><b style="color:#2f66c4">Blu = tori</b> · bianco = uke · visto di lato. Gli arti più lontani sono più scuri. S e D sotto i piedi; arancione = squilibrio e caduta, rosso = falciata.</p>`;
+    const leg = con.length || lat.length ? `<div class="vk-alto">${con.length ? keyAlto : ""}</div><div class="vk-lato">${lat.length ? keyLato : ""}</div>` : "";
+    return `<div class="viste" data-v="${vista}">${sel}${leg}<ol class="steps">${t.passi.map((p, i) => `<li><b>${esc(p.titolo)}</b>${p.pianta || p.lato ? `<div class="plan">${P && p.pianta ? `<div class="v-alto">${P.plan(p.pianta, { cornice: cr })}</div>` : ""}${lati[i] ? `<div class="v-lato">${lati[i]}</div>` : ""}</div>` : ""}<span>${rich(p.testo)}</span></li>`).join("")}</ol></div>`;
   };
   const ul = items => `<div class="card"><ul>${items.map(i => `<li>${rich(i)}</li>`).join("")}</ul></div>`;
   function tecnica(slug) {
@@ -340,6 +353,14 @@
   bar.innerHTML = TABS.map(t => `<a href="${t[0]}" data-tab="${t[2]}">${t[1]}</a>`).join("");
   document.body.appendChild(bar);
 
+  app.addEventListener("click", e => {
+    const b = e.target.closest && e.target.closest("[data-vista]");
+    if (!b) return;
+    const box = b.closest(".viste"), v = b.dataset.vista;
+    box.dataset.v = v; store.set("vista", v === "lato" ? "lato" : "alto");
+    box.querySelectorAll("[data-vista]").forEach(x => x.setAttribute("aria-pressed", x.dataset.vista === v));
+  });
+
   /* ---------- Mini glossario: le parole giapponesi presenti nella pagina aperta ---------- */
   const words = s => " " + String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z]+/g, " ").trim() + " ";
   const GW = (window.GLOSSARIO || []).flatMap(g => [g.t, ...(g.alias || [])].map(n => ({ g, w: words(n) }))).filter(x => x.w.trim().length >= 3);
@@ -350,7 +371,9 @@
     if (page === "glossario" || page === "info" || page === "profilo") return;
     const hdr = app.querySelector("header");
     if (!hdr) return;
-    const txt = words(app.innerText || app.textContent), title = words(hdr.querySelector("h1").textContent);
+    const tw = document.createTreeWalker(app, NodeFilter.SHOW_TEXT), parts = [];
+    while (tw.nextNode()) parts.push(tw.currentNode.nodeValue);
+    const txt = words(parts.join(" ")), title = words(hdr.querySelector("h1").textContent);
     const found = new Map();
     GW.forEach(({ g, w }) => {
       if (title === w) return;

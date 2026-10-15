@@ -107,6 +107,136 @@ window.TECNICHE = [];
     sicurezza: "Si lavora sempre in modo lento e progressivo. Appena uke batte la mano (resa), tori lascia subito. Impara gli strangolamenti solo con il maestro."
   });
 
+  // schede scritte il 15/10/2026: resto del 1° kyo e immobilizzazioni del programma di riferimento (presa destra)
+  T.push({
+    id: "de-ashi-barai", nome: "De ashi barai", gruppo: "Ashi waza", kyo: "1° kyo",
+    sign: "Spazzata del piede che avanza: si spazza il piede di uke un attimo prima che ci appoggi il peso.",
+    quando: "Quando uke porta avanti il piede destro (o lo ritira) e sta per caricarci il peso. È tutta questione di tempo.",
+    presa: "Presa fondamentale: destra al bavero, sinistra alla manica all'altezza del gomito.",
+    passi: [
+      { titolo: "Posizione e movimento", testo: "Shizen tai, in movimento: uke avanza verso di te oppure tu indietreggi e lo fai avanzare. Guarda il suo piede destro senza abbassare la testa." },
+      { titolo: "Kuzushi", testo: "Mentre il piede destro di uke va avanti, le mani lo spostano di lato verso la tua sinistra: la manica tira in fuori e in alto, il bavero accompagna. Il suo peso va verso il piede che sta per appoggiare." },
+      { titolo: "Tsukuri", testo: "Peso sul tuo piede destro, busto dritto, gamba sinistra rilassata e leggermente in fuori, pronta a spazzare." },
+      { titolo: "Kake", testo: "Con la pianta del piede sinistro, curva come un cucchiaio, spazzi la caviglia destra di uke **nella direzione in cui si muove**, appena prima che la appoggi. Le mani girano come un volante (manica giù, bavero su): uke cade sul fianco." }
+    ],
+    errori: ["Spazzare tardi, quando il peso è già sul piede: diventa un calcio", "Usare il tallone o le dita invece della pianta", "Spazzare verso uke invece che di lato, nella direzione del suo passo", "Mani ferme: senza il volante uke non cade", "Abbassare la testa per guardare il piede"],
+    uchikomi: ["Camminare in coppia con tsugi ashi e toccare il piede a tempo, senza proiettare", "Spazzata leggera a ogni passo di uke, cambiando lato", "Da fermo: uke fa un passo, tori spazza al momento giusto"],
+    collegamenti: ["De ashi barai → Hiza guruma (stesso tempo, più in alto)", "De ashi barai → Harai goshi", "Contro-tecnica: Tsubame gaeshi"],
+    sicurezza: "Si spazza con la pianta, mai con il tallone o la punta sulla caviglia. Uke cade di fianco (yoko ukemi); tori tiene la manica."
+  });
+  T.push({
+    id: "hiza-guruma", nome: "Hiza guruma", gruppo: "Ashi waza", kyo: "1° kyo",
+    sign: "Ruota sul ginocchio: il piede blocca il ginocchio di uke e lui gira sopra il blocco come una ruota.",
+    quando: "Quando uke avanza il piede destro o tiene il peso sulla gamba destra.",
+    presa: "Presa fondamentale: destra al bavero, sinistra alla manica.",
+    passi: [
+      { titolo: "Posizione", testo: "Shizen tai di fronte a uke. Meglio in movimento: uke viene avanti con il destro." },
+      { titolo: "Kuzushi", testo: "Tira la manica verso l'esterno e in alto, il bavero spinge verso la tua sinistra: uke va in avanti-destra, sulla punta del piede destro." },
+      { titolo: "Tsukuri", testo: "Passo con il piede destro avanti, all'esterno del piede sinistro di uke, e ruota il busto verso sinistra. Il peso è sul destro." },
+      { titolo: "Kake", testo: "Appoggia la **pianta** del piede sinistro sull'esterno del ginocchio destro di uke, gamba quasi tesa, e continua a ruotare il busto e le braccia verso sinistra come un volante. Uke gira sopra il ginocchio bloccato e cade davanti a te." }
+    ],
+    errori: ["Calciare il ginocchio invece di appoggiare la pianta", "Spingere il ginocchio all'indietro: è pericoloso e non proietta", "Ruotare solo le braccia senza il busto", "Passo d'appoggio troppo corto: non c'è spazio per la rotazione"],
+    uchikomi: ["Entrata lenta: passo, piede sul ginocchio, rotazione, senza proiettare", "In movimento con uke che avanza, a tempo", "Alternare con de ashi barai sullo stesso passo"],
+    collegamenti: ["De ashi barai → Hiza guruma", "Hiza guruma → Sasae tsurikomi ashi (se uke piega il ginocchio)", "Hiza guruma → O soto gari"],
+    sicurezza: "Il ginocchio è fragile: si appoggia la pianta di lato, mai sulla rotula e mai spingendo indietro."
+  });
+  T.push({
+    id: "sasae-tsurikomi-ashi", nome: "Sasae tsurikomi ashi", gruppo: "Ashi waza", kyo: "1° kyo",
+    sign: "Blocco del piede con trazione e sollevamento: il piede di tori ferma la caviglia di uke mentre le braccia lo tirano in avanti e lo ruotano.",
+    quando: "Quando uke avanza il piede destro, o quando lo tiri in avanti e lui resiste.",
+    presa: "Presa fondamentale: destra al bavero (che solleva: tsuri), sinistra alla manica (che tira: komi).",
+    passi: [
+      { titolo: "Posizione", testo: "Shizen tai. Fai indietreggiare il tuo piede destro di mezzo passo in diagonale per aprire lo spazio davanti a uke." },
+      { titolo: "Kuzushi", testo: "Tira uke in avanti-destra e in alto: la manica tira, il bavero solleva. Uke va sulla punta del piede destro." },
+      { titolo: "Tsukuri", testo: "Ruota il busto a sinistra appoggiandoti sul piede destro, che è già indietro. Il corpo si inclina leggermente indietro per fare leva." },
+      { titolo: "Kake", testo: "La **pianta** del piede sinistro blocca davanti la caviglia destra di uke (gamba tesa). Il blocco è fermo: non si spazza. Le braccia continuano a tirare e ruotare verso sinistra e uke cade in avanti sopra il piede bloccato." }
+    ],
+    errori: ["Spazzare invece di bloccare (diventa de ashi barai fatto male)", "Bloccare con il tallone o sul polpaccio", "Braccia che tirano in basso invece che in alto e in giro", "Busto in avanti verso uke: si perde la leva"],
+    uchikomi: ["Blocco da fermo con uke che si lascia tirare, senza proiettare", "Passo indietro + blocco + rotazione, in sequenza", "Confronto con hiza guruma: stessa rotazione, blocco più basso"],
+    collegamenti: ["Hiza guruma → Sasae tsurikomi ashi", "Sasae tsurikomi ashi → O uchi gari (se uke arretra)", "Sasae tsurikomi ashi → Harai tsurikomi ashi"],
+    sicurezza: "Il blocco è con la pianta sotto la caviglia, mai un calcio. Tori trattiene la manica per accompagnare."
+  });
+  T.push({
+    id: "uki-goshi", nome: "Uki goshi", gruppo: "Koshi waza", kyo: "1° kyo",
+    sign: "Anca fluttuante: uke «galleggia» sull'anca di tori e cade per la sola rotazione, senza sollevamento.",
+    quando: "Quando uke avanza o è rigido e piegato in avanti.",
+    presa: "Mano sinistra alla manica; il braccio destro passa dietro la schiena di uke e lo stringe alla vita (o alla cintura).",
+    passi: [
+      { titolo: "Presa e posizione", testo: "Dalla presa fondamentale lascia il bavero e porta il braccio destro attorno alla vita di uke, mano sulla schiena o sulla cintura." },
+      { titolo: "Kuzushi", testo: "Tira la manica in avanti e in alto e stringi uke a te con il braccio destro: va in avanti-destra, sulle punte." },
+      { titolo: "Tsukuri", testo: "Passo con il destro davanti al piede destro di uke, poi ruota e porta il sinistro accanto. Ti ritrovi di fianco a lui, con l'**anca destra** contro il suo ventre. Ginocchia appena piegate: l'anca entra solo a metà." },
+      { titolo: "Kake", testo: "Ruota il busto verso sinistra tirando la manica: uke scivola sopra la tua anca e cade davanti a te. Non spingi con le gambe e non sollevi: è la rotazione che proietta." }
+    ],
+    errori: ["Entrare con tutta l'anca e sollevare: diventa o goshi", "Restare lontani: il braccio dietro la schiena non controlla", "Ruotare solo la testa e non il busto", "Lasciare la manica alla fine"],
+    uchikomi: ["Entrata e rotazione a vuoto, 10 volte per lato", "Entrata con uke che si lascia caricare, senza proiettare", "Confronto con o goshi per sentire la differenza"],
+    collegamenti: ["Uki goshi → O goshi", "Uki goshi → Harai goshi (se uke si sposta davanti)", "Contro-tecnica: Ushiro goshi"],
+    sicurezza: "Tori tiene la manica fino a terra; uke batte con il braccio libero."
+  });
+  T.push({
+    id: "o-goshi", nome: "O goshi", gruppo: "Koshi waza", kyo: "1° kyo",
+    sign: "Grande anca: l'anca di tori entra completamente sotto quella di uke e lo solleva.",
+    quando: "Quando uke è in avanti o ti si avvicina con il busto.",
+    presa: "Mano sinistra alla manica; il braccio destro passa sotto l'ascella sinistra di uke e lo abbraccia alla vita, mano sulla schiena.",
+    passi: [
+      { titolo: "Presa e posizione", testo: "Dalla presa fondamentale porta il braccio destro attorno alla vita di uke, petto vicino a lui." },
+      { titolo: "Kuzushi", testo: "Tira la manica in avanti e in alto, il braccio destro tira uke contro di te: va in avanti, sulle punte." },
+      { titolo: "Tsukuri", testo: "Passo col destro davanti al suo destro, ruota e porta il sinistro tra i suoi piedi. Piedi dentro i suoi, **ginocchia piegate**: la tua cintura è più bassa della sua e l'anca sporge oltre il suo fianco destro. Schiena contro il suo petto." },
+      { titolo: "Kake", testo: "Distendi le gambe sollevando uke sull'anca, poi ruota il busto a sinistra tirando la manica. Uke passa sopra l'anca e cade davanti a te." }
+    ],
+    errori: ["Ginocchia dritte nell'entrata: non riesci a sollevare", "Anca che non sporge oltre il fianco di uke", "Sollevare con la schiena invece che con le gambe", "Piedi fuori dai suoi: perdi l'equilibrio"],
+    uchikomi: ["Entrata a vuoto con piegamento delle ginocchia", "Entrata e sollevamento senza proiettare (uke in punta di piedi)", "Tre entrate e alla terza la proiezione, su materasso"],
+    collegamenti: ["Uki goshi → O goshi", "Ko uchi gari → O goshi", "Contro-tecnica: Ushiro goshi, Utsuri goshi"],
+    sicurezza: "Si solleva con le gambe, schiena dritta. Tori accompagna con la manica; uke fa la caduta laterale o avanti."
+  });
+  T.push({
+    id: "kuzure-kesa-gatame", nome: "Kuzure kesa gatame", gruppo: "Osaekomi waza", kyo: "",
+    sign: "Kesa gatame «modificato»: invece di passare attorno al collo, il braccio passa sotto l'ascella di uke.",
+    quando: "Quando uke è sulla schiena e protegge il collo, o quando da hon kesa gatame libera la testa.",
+    presa: "Un braccio blocca il braccio di uke contro il tuo fianco; l'altro passa sotto la sua ascella opposta e la mano va a terra o sul bavero dietro la spalla.",
+    passi: [
+      { titolo: "Posizione", testo: "Siediti di fianco al torace di uke come in hon kesa gatame: gamba destra piegata avanti, sinistra indietro, gambe larghe." },
+      { titolo: "Presa", testo: "Il braccio sinistro stringe il braccio destro di uke sotto la tua ascella. Il braccio destro passa **sotto l'ascella sinistra** di uke, mano a terra con il palmo giù o al bavero dietro la sua spalla." },
+      { titolo: "Peso e controllo", testo: "Il petto preme sul petto di uke, il busto è basso. La testa resta bassa vicino alla sua per non essere ribaltati." },
+      { titolo: "Mantenimento", testo: "Se uke fa il ponte o gira, sposta le gambe e il peso per seguirlo, senza lasciare il braccio. In gara servono 20 secondi per l'ippon." }
+    ],
+    errori: ["Mano destra lontana dal corpo di uke: lui libera la spalla", "Busto alto", "Gambe vicine: basta una spinta per ribaltarti", "Lasciare il braccio di uke"],
+    uchikomi: ["Passaggio da hon kesa a kuzure kesa quando uke libera la testa", "Tenere 20 secondi con uke che prova a uscire, poi cambiare"],
+    collegamenti: ["Hon kesa gatame → Kuzure kesa gatame", "Kuzure kesa gatame → Kata gatame (se uke spinge con il braccio)", "Kuzure kesa gatame → Ushiro kesa gatame"],
+    sicurezza: "Niente peso sulla gola o sul viso. Uke batte quando non riesce a uscire o sente dolore: tori allenta subito."
+  });
+  T.push({
+    id: "yoko-shiho-gatame", nome: "Yoko shiho gatame", gruppo: "Osaekomi waza", kyo: "",
+    sign: "Controllo laterale sui quattro lati: tori è di traverso sul petto di uke.",
+    quando: "Quando sei di lato a uke che è sulla schiena, per esempio dopo un ribaltamento o un passaggio di guardia.",
+    presa: "Il braccio verso la testa passa sotto il collo di uke e afferra il bavero; l'altro passa tra le sue gambe e afferra la cintura o i pantaloni.",
+    passi: [
+      { titolo: "Posizione", testo: "In ginocchio di fianco a uke, perpendicolare a lui. Un ginocchio contro il suo fianco, l'altro vicino alla spalla: niente spazio tra te e lui." },
+      { titolo: "Presa", testo: "Il braccio sinistro passa sotto il collo di uke e afferra il suo bavero; il braccio destro passa tra le sue gambe e afferra la cintura (o i pantaloni)." },
+      { titolo: "Peso e controllo", testo: "Il petto preme sul petto di uke, la testa è bassa e leggermente verso le sue gambe. Le anche restano basse; puoi anche distendere le gambe all'indietro per pesare di più." },
+      { titolo: "Mantenimento", testo: "Quando uke fa il ponte verso di te, abbassa le anche e chiudi le ginocchia contro di lui. Se gira, segui il movimento cambiando appoggio." }
+    ],
+    errori: ["Anche alte: uke infila il ginocchio e ti spinge via", "Ginocchia lontane dal suo corpo", "Braccio sotto il collo che non afferra niente", "Testa alta: perdi peso e controllo"],
+    uchikomi: ["Entrata in yoko shiho da fianco, con uke fermo", "Tenere 20 secondi con uke che fa il ponte e gira, poi cambiare", "Passaggio da kesa gatame a yoko shiho gatame"],
+    collegamenti: ["Kesa gatame → Yoko shiho gatame", "Yoko shiho gatame → Kami shiho gatame", "Yoko shiho gatame → Tate shiho gatame"],
+    sicurezza: "Niente avambraccio sulla gola. Uke batte quando non riesce a uscire: tori allenta subito."
+  });
+  T.push({
+    id: "tate-shiho-gatame", nome: "Tate shiho gatame", gruppo: "Osaekomi waza", kyo: "",
+    sign: "Controllo longitudinale: tori è a cavallo di uke, nella stessa direzione.",
+    quando: "Quando sei sopra uke, seduto sul suo ventre o sul petto (montata).",
+    presa: "Un braccio di uke e la sua testa sono chiusi insieme dal tuo braccio; le gambe controllano le sue.",
+    passi: [
+      { titolo: "Posizione", testo: "A cavallo di uke, ginocchia a terra e strette contro i suoi fianchi. Bacino basso sul suo petto o sul ventre." },
+      { titolo: "Presa", testo: "Il tuo braccio destro passa sotto la nuca di uke e chiude insieme la sua testa e il suo braccio destro, che resta disteso accanto al viso. La mano sinistra afferra il bavero o va a terra per l'equilibrio." },
+      { titolo: "Peso e controllo", testo: "Il petto preme sul petto di uke, la testa è bassa accanto alla sua. Agganci i piedi sotto le sue gambe per non farti ribaltare." },
+      { titolo: "Mantenimento", testo: "Quando uke fa il ponte e spinge di lato, allarga le gambe o il braccio libero da quella parte e abbassa il peso. Non sederti dritto." }
+    ],
+    errori: ["Busto alto, seduti: uke fa il ponte e ti ribalta", "Ginocchia lontane dai fianchi", "Braccio di uke libero", "Piedi non agganciati quando uke fa il ponte"],
+    uchikomi: ["Montata e controllo con uke fermo", "Tenere 20 secondi con uke che fa il ponte, poi cambiare", "Passaggio da yoko shiho gatame a tate shiho gatame"],
+    collegamenti: ["Yoko shiho gatame → Tate shiho gatame", "Tate shiho gatame → Ude hishigi juji gatame (se uke spinge con le braccia)"],
+    sicurezza: "Niente peso sul collo. Uke batte quando non riesce a uscire: tori allenta subito."
+  });
+
   // schemi dall'alto (pianta.js): tori in blu parte in basso, uke in bianco in alto
   const start = {
     tori: { c: [0, 0], sx: [-14, -4], dx: [14, -4], etichetta: [0, -24] },
@@ -163,4 +293,56 @@ window.TECNICHE = [];
     ]
   };
   T.forEach(tc => (PIANTE[tc.id] || []).forEach((p, i) => { if (tc.passi[i]) tc.passi[i].pianta = p; }));
+  // vista laterale (laterale.js): pose dei due judoka per ogni passo
+  const st1 = { tori: { pelvis: [0, 92, 0], yaw: 0, lean: 5, piedi: { dx: [2, 0, 13], sx: [-2, 0, -13] }, mani: { dx: [44, 128, 8], sx: [40, 104, -26] } },
+  uke: { pelvis: [64, 92, 0], yaw: 180, lean: 5, piedi: { dx: [64, 0, -13], sx: [62, 0, 13] }, mani: { dx: [20, 128, -8], sx: [24, 104, 26] } } };
+  const LATO = {
+  "o-uchi-gari": { cam: { yaw: -22, pitch: 12 }, passi: [
+    st1,
+    { tori: { pelvis: [12, 92, 0], yaw: 0, lean: 8, piedi: { dx: [14, 0, 13], sx: [8, 0, -13] }, mani: { dx: [58, 124, 8], sx: [48, 108, -26] } },
+      uke: { pelvis: [70, 92, 4], yaw: 180, lean: -14, tilt: 6, piedi: { dx: [64, 0, -13], sx: [70, 0, 14] }, mani: { dx: [30, 124, -8], sx: [34, 104, 26] } },
+      frecce: [{ da: [74, 150, 4], a: [100, 150, 26] }] },
+    { tori: { pelvis: [36, 88, 0], yaw: -10, lean: 12, piedi: { dx: [46, 0, 2], sx: [28, 0, -6] }, mani: { dx: [62, 122, 8], sx: [54, 108, -28] } },
+      uke: { pelvis: [72, 92, 4], yaw: 180, lean: -14, tilt: 6, piedi: { dx: [66, 0, -13], sx: [72, 0, 16] }, mani: { dx: [46, 124, -6], sx: [50, 104, 22] } },
+      frecce: [{ da: [14, 2, 13], a: [42, 2, 4], col: "#6b7480", dash: true }] },
+    { tori: { pelvis: [46, 86, 2], yaw: -20, lean: 22, piedi: { dx: [76, 10, 28], sx: [32, 0, -6] }, ginocchio: { dx: [.5, .2, 1] }, mani: { dx: [72, 116, 8], sx: [62, 104, -24] } },
+      uke: { pelvis: [80, 80, 6], yaw: 180, lean: -36, tilt: 8, piedi: { dx: [68, 0, -13], sx: [84, 22, 34] }, mani: { dx: [56, 116, -6], sx: [60, 100, 20] } },
+      frecce: [{ da: [56, 8, 10], a: [84, 12, 38], col: "#c8372d" }, { da: [86, 140, 6], a: [116, 100, 24] }] }
+  ] },
+  "ippon-seoi-nage": { cam: { yaw: 25, pitch: 10 }, passi: [
+    st1,
+    { tori: { pelvis: [-6, 92, 0], yaw: 0, lean: -4, piedi: { dx: [4, 0, 13], sx: [-10, 0, -13] }, mani: { dx: [40, 126, 8], sx: [10, 116, -30] } },
+      uke: { pelvis: [56, 94, 0], yaw: 180, lean: 16, piedi: { dx: [58, 0, -13], sx: [64, 0, 13] }, mani: { dx: [14, 126, -8], sx: [18, 104, 24] } },
+      frecce: [{ da: [46, 150, 0], a: [18, 150, -24] }] },
+    { tori: { pelvis: [44, 80, 0], yaw: 180, lean: 12, piedi: { dx: [46, 0, -10], sx: [46, 0, 10] }, ginocchio: { dx: [-1, 0, 0], sx: [-1, 0, 0] }, gomito: { dx: [0, -1, -.3] }, mani: { dx: [62, 126, -14], sx: [22, 112, -26] } },
+      uke: { pelvis: [66, 94, 0], yaw: 180, lean: 22, piedi: { dx: [62, 0, -13], sx: [66, 0, 13] }, mani: { dx: [34, 118, 6], sx: [40, 100, 18] } },
+      frecce: [{ da: [10, 2, 13], a: [42, 2, -8], col: "#6b7480", dash: true }] },
+    { tori: { pelvis: [46, 86, 0], yaw: 180, lean: 55, piedi: { dx: [48, 0, -10], sx: [48, 0, 10] }, ginocchio: { dx: [-1, 0, 0], sx: [-1, 0, 0] }, mani: { dx: [12, 116, -12], sx: [0, 92, -26] } },
+      uke: { pelvis: [70, 122, -6], yaw: 180, lean: 78, tilt: -15, piedi: { dx: [104, 140, -14], sx: [108, 128, 8] }, ginocchio: { dx: [0, 1, 0], sx: [0, 1, 0] }, mani: { dx: [6, 104, -20], sx: [28, 118, 18] } },
+      frecce: [{ da: [100, 170, -6], a: [0, 80, -6] }] }
+  ] },
+  "osoto-gari": { cam: { yaw: 160, pitch: 10 }, passi: [
+    st1,
+    { tori: { pelvis: [12, 92, -2], yaw: 0, lean: 8, piedi: { dx: [8, 0, 13], sx: [18, 0, -13] }, mani: { dx: [58, 124, 6], sx: [40, 112, -30] } },
+      uke: { pelvis: [70, 92, -4], yaw: 180, lean: -14, tilt: -6, piedi: { dx: [68, 0, -14], sx: [62, 0, 13] }, mani: { dx: [28, 124, -8], sx: [34, 104, 24] } },
+      frecce: [{ da: [72, 150, 0], a: [100, 150, -22] }] },
+    { tori: { pelvis: [44, 90, -14], yaw: -12, lean: 14, piedi: { dx: [36, 22, 4], sx: [54, 0, -36] }, ginocchio: { dx: [1, 0.3, 0] }, mani: { dx: [70, 122, 2], sx: [52, 116, -40] } },
+      uke: { pelvis: [74, 92, -6], yaw: 180, lean: -16, tilt: -8, piedi: { dx: [70, 0, -14], sx: [62, 0, 13] }, mani: { dx: [46, 124, -16], sx: [48, 104, 18] } },
+      frecce: [{ da: [30, 2, -14], a: [50, 2, -34], col: "#6b7480", dash: true }] },
+    { tori: { pelvis: [64, 88, -38], yaw: -30, lean: 30, piedi: { dx: [114, 62, -22], sx: [56, 0, -46] }, ginocchio: { dx: [0.3, -1, 0] }, gomito: { sx: [0, -1, -1] }, mani: { dx: [86, 116, -2], sx: [74, 100, -34] } },
+      uke: { pelvis: [90, 78, -8], yaw: 180, lean: -44, tilt: -8, piedi: { dx: [58, 46, -16], sx: [68, 0, 13] }, ginocchio: { dx: [-1, .4, 0] }, mani: { dx: [60, 110, -18], sx: [62, 98, 14] } },
+      frecce: [{ da: [96, 40, -40], a: [124, 74, -40], col: "#c8372d" }, { da: [96, 140, -10], a: [130, 92, -16] }] }
+  ] },
+  "hon-kesa-gatame": { cam: { yaw: -35, pitch: 32 }, passi: (() => {
+    const uke = { pelvis: [40, 12, 0], yaw: 180, lean: -88, piedi: { dx: [-40, 6, -16], sx: [-40, 6, 16] }, ginocchio: { dx: [0, 1, 0], sx: [0, 1, 0] }, mani: { dx: [56, 26, -40], sx: [60, 8, 34] } };
+    const tori = { pelvis: [66, 14, -38], yaw: 15, lean: 10, tilt: 45, piedi: { dx: [140, 4, -76], sx: [-4, 4, -90] }, ginocchio: { dx: [0, 1, 0], sx: [0, 1, 0] }, mani: { dx: [104, 16, 8], sx: [54, 26, -46] } };
+    return [
+      { tori: { ...tori, tilt: 20, mani: { dx: [90, 30, -20], sx: [60, 30, -50] } }, uke },
+      { tori, uke },
+      { tori: { ...tori, tilt: 55 }, uke, frecce: [{ da: [74, 80, -50], a: [84, 50, -10] }] },
+      { tori: { ...tori, tilt: 55, piedi: { dx: [146, 4, -86], sx: [-10, 4, -100] } }, uke }
+    ];
+  })() }
+};
+  T.forEach(tc => { const L = LATO[tc.id]; if (L) L.passi.forEach((p, i) => { if (tc.passi[i]) { tc.passi[i].lato = p; tc.cam = L.cam; } }); });
 })();
