@@ -202,3 +202,13 @@ button.link { font: inherit; background: none; border: 0; color: var(--muted); t
 .tabs2 { display: flex; gap: 6px; }
 .tabs2 button { font: inherit; font-weight: 600; flex: 1; padding: 9px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink); cursor: pointer; }
 .tabs2 button.on { background: var(--accent); border-color: var(--accent); color: var(--surface); }
+
+.next.alt { background: var(--surface); color: var(--ink); border: 1px solid var(--accent); margin-top: 10px; }
+.next.alt .eyebrow { color: var(--accent); opacity: 1; }
+.belt-me.setup { text-decoration: none; border-style: dashed; }
+.form label.check { display: flex; gap: 8px; align-items: flex-start; color: var(--ink); }
+.form label.check input { width: auto; margin-top: 4px; }
+.foot { margin-top: 36px; padding-top: 14px; border-top: 1px solid var(--line); font-size: .78rem; color: var(--muted); text-align: center; }
+.foot a { color: var(--accent); }
+.belt-me, .next { margin-top: 10px; }
+.belt-me.setup b { color: var(--ink); }

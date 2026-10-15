@@ -16,43 +16,53 @@
   const tiles = items => `<div class="menu">${items.map(i => `<a class="tile${i.cls ? " " + i.cls : ""}" href="${esc(i.href)}">${i.badge ? `<em>${esc(i.badge)}</em>` : ""}<b>${esc(i.label)}</b>${i.text ? `<span>${esc(i.text)}</span>` : ""}</a>`).join("")}</div>`;
   const beltDot = b => `<i class="dot${b.bordo ? " edge" : ""}" style="background:${b.colore}"></i>`;
 
+  /* ---------- Profilo (resta sul telefono, nessun account) ---------- */
+  const profilo = () => ({ cintura: "", corso: "judo", lasik: false, ...json("profilo", {}) });
+  const saveProfilo = p => store.set("profilo", JSON.stringify(p));
+  const nextBelt = id => { const i = B.lista.findIndex(b => b.id === id); return i >= 0 ? B.lista[i + 1] : null; };
+
   /* ---------- Home ---------- */
   const START = new Date(2026, 9, 12), END = new Date(2026, 10, 18);
-  function nextSession() {
+  function nextLesson(corso) {
+    const c = D.orari.find(o => o.id === corso) || D.orari[0];
     const now = new Date(); now.setHours(0, 0, 0, 0);
     for (let i = 0; i < 8; i++) {
       const d = new Date(now); d.setDate(now.getDate() + i);
-      if (D.mieiGiorni.includes(d.getDay())) return { d, i };
+      if (c.giorni.includes(d.getDay())) return { d, i, c };
     }
     return null;
   }
+  const whenLabel = ns => ns.i === 0 ? "Oggi" : ns.i === 1 ? "Domani" : GIORNI[ns.d.getDay()][0].toUpperCase() + GIORNI[ns.d.getDay()].slice(1);
   function programmaDel(d) {
     if (d < START || d > END) return null;
     const week = Math.floor((d - START) / 864e5 / 7) + 1;
     const prog = C.sections.find(s => s.id === "progressione").blocks.find(b => b.type === "progress");
-    const row = prog.rows[week - 1];
-    return { week, load: row.load, seduta: d.getDay() === 1 ? "A" : "B" };
+    return { week, load: prog.rows[week - 1].load, seduta: d.getDay() === 1 ? "A" : "B" };
   }
   function home() {
-    const ns = nextSession();
-    let next = "";
-    if (ns) {
-      const when = ns.i === 0 ? "Oggi" : ns.i === 1 ? "Domani" : GIORNI[ns.d.getDay()][0].toUpperCase() + GIORNI[ns.d.getDay()].slice(1);
-      const p = programmaDel(ns.d);
-      next = `<a class="next" href="#/allenamenti/lasik"><span class="eyebrow">Prossimo allenamento</span><b>${when} ${ns.d.getDate()} ${MESI[ns.d.getMonth()]} · ${esc(D.mieiOrari)}</b>${p ? `<span>Settimana ${p.week} · Seduta ${p.seduta} · carico ${p.load.toLowerCase()}</span>` : `<span>Judo grandi in dojo</span>`}</a>`;
+    const pr = profilo();
+    const me = B.lista.find(b => b.id === pr.cintura), nx = me && nextBelt(me.id);
+    const ns = nextLesson(pr.corso);
+    let cards = "";
+    if (ns) cards += `<a class="next" href="#/dojo"><span class="eyebrow">Prossima lezione · ${esc(ns.c.corso)}</span><b>${whenLabel(ns)} ${ns.d.getDate()} ${MESI[ns.d.getMonth()]} · ${esc(ns.c.orario)}</b><span>${esc(D.palestra)}</span></a>`;
+    if (pr.lasik) {
+      const own = [1, 3].map(g => { const d = new Date(); d.setHours(0, 0, 0, 0); while (d.getDay() !== g || d < START) d.setDate(d.getDate() + 1); return d; }).sort((a, b) => a - b)[0];
+      const p = programmaDel(own);
+      if (p) cards += `<a class="next alt" href="#/allenamenti/lasik"><span class="eyebrow">Il tuo programma post-LASIK</span><b>${whenLabel({ i: Math.round((own - new Date().setHours(0, 0, 0, 0)) / 864e5), d: own })} ${own.getDate()} ${MESI[own.getMonth()]} · Seduta ${p.seduta}</b><span>Settimana ${p.week} · carico ${p.load.toLowerCase()}</span></a>`;
     }
-    const me = B.lista.find(b => b.id === B.io.cintura), nx = B.lista.find(b => b.id === B.prossima);
-    app.innerHTML = head("Judo · Mogliano Veneto", "Il mio judo", "Teoria, allenamenti e programmi delle cinture in un posto solo.") + `
+    const beltCard = me
+      ? `<div class="belt-me"><span>La tua cintura</span><b>${beltDot(me)} ${esc(me.nome)}</b>${nx ? `<a href="#/cinture/${esc(nx.id)}">Prossima: ${esc(nx.nome)} →</a>` : ""}<a href="#/profilo">Cambia profilo</a></div>`
+      : `<a class="belt-me setup" href="#/profilo"><span>Profilo</span><b>Scegli la tua cintura</b><small>Così la home e i menu si adattano a te. Resta solo su questo telefono.</small></a>`;
+    app.innerHTML = head("Judo · Mogliano Veneto", "Judo Mogliano", "Teoria, allenamenti e programmi delle cinture in un posto solo.") + `
       <div class="search"><input id="q" type="search" placeholder="Cerca una tecnica o un termine" autocomplete="off" aria-label="Cerca"><div id="res"></div></div>
-      ${next}
+      ${cards}${beltCard}
       ${tiles([
-        { href: "#/allenamenti", label: "Allenamenti", text: "Programma post-LASIK, movimenti in classe, diario" },
+        { href: "#/allenamenti", label: "Allenamenti", text: pr.lasik ? "Programma post-LASIK, movimenti in classe, diario" : "Movimenti fatti in classe e diario" },
         { href: "#/teoria", label: "Teoria", text: "Storia, principi, Gokyo, kata, regole di gara" },
-        { href: "#/cinture", label: "Cinture", text: `Programmi per cintura (${B.anno}): in cantiere` },
+        { href: me ? `#/cinture/${me.id}` : "#/cinture", label: me ? `Cintura ${me.nome.toLowerCase()}` : "Cinture", text: `Programmi per cintura (${B.anno}): in cantiere` },
         { href: "#/glossario", label: "Glossario", text: "Il significato dei termini giapponesi" },
         { href: "#/dojo", label: "Dojo", text: "Orari, palestra e appuntamenti" }
-      ])}
-      <div class="belt-me"><span>La tua cintura</span>${me ? `<b>${beltDot(me)} ${esc(me.nome)}</b>` : ""}<small>${esc(B.io.nota || "")}</small>${nx ? `<a href="#/cinture/${esc(nx.id)}">Prossima: ${esc(nx.nome)} →</a>` : ""}</div>`;
+      ])}`;
     const q = app.querySelector("#q"), res = app.querySelector("#res");
     q.addEventListener("input", () => {
       const s = norm(q.value);
@@ -66,10 +76,45 @@
     });
   }
 
+  function profiloPage() {
+    const pr = profilo();
+    app.innerHTML = head("Profilo", "Il tuo profilo", "Scegli cintura e corso: la home e i menu si adattano. Non serve un account: le scelte restano su questo telefono.", ["#/", "Home"]) + `
+      <form class="form" id="f">
+        <label>Cintura attuale<select name="cintura"><option value="">Non scelta</option>${B.lista.map(b => `<option value="${esc(b.id)}"${b.id === pr.cintura ? " selected" : ""}>${esc(b.nome)}</option>`).join("")}</select></label>
+        <label>Corso<select name="corso">${D.orari.filter(o => o.id).map(o => `<option value="${esc(o.id)}"${o.id === pr.corso ? " selected" : ""}>${esc(o.corso)}</option>`).join("")}</select></label>
+        <label class="check"><input type="checkbox" name="lasik"${pr.lasik ? " checked" : ""}> Mostra il programma post-LASIK (scheda personale di Marco)</label>
+        <button type="submit" class="btn">Salva</button><span class="small" id="ok"></span>
+      </form>`;
+    app.querySelector("#f").addEventListener("submit", e => {
+      e.preventDefault();
+      const f = e.target; saveProfilo({ cintura: f.cintura.value, corso: f.corso.value, lasik: f.lasik.checked });
+      app.querySelector("#ok").textContent = "Salvato."; setTimeout(() => { location.hash = "#/"; }, 500);
+    });
+  }
+
+  function infoPage() {
+    const I = window.INFO;
+    app.innerHTML = head("Informazioni", "Crediti e note legali", "", ["#/", "Home"]) + `<div class="stack">
+      ${block({ type: "callout", tone: "info", title: "Ideata e realizzata da " + I.autore, text: `Progetto, contenuti e coordinamento: **${I.autore}**. L'app è stata sviluppata con l'assistenza di Claude (Anthropic). Versione ${I.versione}. Codice: ${I.repo}` })}
+      <h3 class="sub">Privacy</h3>${block({ type: "text", text: "L'app **non raccoglie dati**, non usa cookie né statistiche e non ha account. Profilo, spunte, diario e movimenti aggiunti restano nella memoria del tuo telefono e si cancellano se cancelli i dati del sito." })}
+      <h3 class="sub">Fonti</h3>${block({ type: "list", items: [
+        "Programmi di cintura del dojo di Mogliano Veneto (Judo e Ju Jitsu), secondo i programmi FIJLKAM",
+        "«Aggiornamento del Regolamento delle competizioni di Judo 2025–2028» (IJF Technical Seminar, Istanbul 2024)",
+        "Dispensa «I Kata di Judo» a cura del M° Daniele Mainenti, 6° dan (edizione 2023)",
+        "«Programma fondamentali Ju Jitsu» FIJLKAM",
+        "Nozioni generali sul judo di tradizione Kodokan"] })}
+      <p class="small">I marchi, i nomi e i documenti citati appartengono ai rispettivi titolari (FIJLKAM, IJF, Kodokan). Qui compaiono solo riassunti a scopo di studio personale e non c'è alcuna affiliazione ufficiale.</p>
+      <h3 class="sub">Avvertenze</h3>${block({ type: "callout", tone: "warn", items: [
+        "Le informazioni di judo sono un ripasso: per esami e gare vale quello che insegna il maestro e il regolamento ufficiale in vigore.",
+        "Il programma post-LASIK è una scheda personale, non un parere medico: ogni ripresa dell'attività va concordata con l'oculista."] })}
+      <h3 class="sub">Diritti</h3>${block({ type: "text", text: `© ${I.anno} ${I.autore}. Testi, disegni e codice originali dell'app: tutti i diritti riservati salvo diversa licenza indicata nel repository.` })}</div>`;
+  }
+
   /* ---------- Allenamenti ---------- */
   function allenamenti() {
-    app.innerHTML = head("Allenamenti", "Allenamenti", "Il programma di forza e stretching, i movimenti visti a lezione e il diario delle sedute.") + tiles([
-      { href: "#/allenamenti/lasik", label: "Programma post-LASIK", text: "6 settimane, lunedì e mercoledì, con disegni degli esercizi" },
+    const las = profilo().lasik;
+    app.innerHTML = head("Allenamenti", "Allenamenti", las ? "Il programma di forza e stretching, i movimenti visti a lezione e il diario delle sedute." : "I movimenti visti a lezione e il diario delle sedute.") + tiles([
+      ...(las ? [{ href: "#/allenamenti/lasik", label: "Programma post-LASIK", text: "6 settimane, lunedì e mercoledì, con disegni degli esercizi" }] : []),
       { href: "#/allenamenti/classe", label: "In classe", text: "I movimenti fatti a lezione, da aggiungere pian piano" },
       { href: "#/allenamenti/diario", label: "Diario", text: "Come è andata ogni seduta, con note sul carico" }
     ]);
@@ -159,9 +204,9 @@
 
   /* ---------- Cinture ---------- */
   function cinture() {
-    const me = B.io.cintura;
+    const me = profilo().cintura, nxId = (nextBelt(me) || {}).id;
     app.innerHTML = head("Cinture", "Cinture", `I programmi per il ${B.anno} non sono ancora definiti: ogni cintura è **in cantiere** e si aggiorna quando il maestro li comunica. Intanto restano i programmi degli anni passati, come riferimento.`) + `
-      <div class="belts">${B.lista.map(b => `<a class="belt" href="#/cinture/${esc(b.id)}">${beltDot(b)}<b>${esc(b.nome)}</b><span>${b.id === me ? "la tua cintura" : b.id === B.prossima ? "la prossima" : ""}</span><em class="state ${b.stato === "in cantiere" ? "wip" : "ok"}">${esc(b.stato)}</em></a>`).join("")}</div>`;
+      <div class="belts">${B.lista.map(b => `<a class="belt" href="#/cinture/${esc(b.id)}">${beltDot(b)}<b>${esc(b.nome)}</b><span>${b.id === me ? "la tua cintura" : b.id === nxId ? "la prossima" : ""}</span><em class="state ${b.stato === "in cantiere" ? "wip" : "ok"}">${esc(b.stato)}</em></a>`).join("")}</div>`;
   }
   function programma(p) {
     return `<h3 class="sub">Teoria</h3><div class="card"><ul>${p.teoria.map(t => `<li>${esc(t)}</li>`).join("")}</ul></div>
@@ -206,7 +251,7 @@
   /* ---------- Dojo ---------- */
   function dojo() {
     app.innerHTML = head("Dojo", D.nome, `Stagione ${D.stagione}`) + `<div class="stack">
-      <h3 class="sub">Orari delle lezioni</h3>${block({ type: "table", head: ["Corso", "Giorni", "Orario"], rows: D.orari })}
+      <h3 class="sub">Orari delle lezioni</h3>${block({ type: "table", head: ["Corso", "Giorni", "Orario"], rows: D.orari.map(o => [o.corso, o.giorni.map(g => GIORNI[g]).join(" e "), o.orario]) })}
       <h3 class="sub">Dove e quando</h3>${block({ type: "list", items: [`**Palestra:** ${D.palestra}`, `**Inizio attività:** ${D.inizio}`, `**Fine attività:** ${D.fine}`] })}
       <h3 class="sub">Eventi passati</h3>${block({ type: "cards", items: D.eventi.map(e => ({ title: e.titolo, sub: e.quando, text: e.text })) })}</div>`;
   }
@@ -230,7 +275,10 @@
     else if (a === "cinture") b ? cintura(b) : cinture();
     else if (a === "glossario") glossario();
     else if (a === "dojo") dojo();
+    else if (a === "profilo") profiloPage();
+    else if (a === "info") infoPage();
     else notFound();
+    app.insertAdjacentHTML("beforeend", `<footer class="foot">Ideata e realizzata da ${esc(window.INFO.autore)} · <a href="#/info">Crediti e note legali</a></footer>`);
     wire(app);
     bar.querySelectorAll("a").forEach(l => l.classList.toggle("on", (a || "home") === l.dataset.tab));
     window.scrollTo(0, 0);

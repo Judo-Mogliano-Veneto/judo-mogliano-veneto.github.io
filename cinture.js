@@ -101,9 +101,6 @@
   };
 
   window.CINTURE = {
-    // la cintura attuale compare in evidenza; aggiornala quando cambia
-    io: { cintura: "verde", nota: "Esame fatto il 12 ottobre 2026, esito atteso verso il 26 ottobre." },
-    prossima: "blu",
     anno: "2026/27",
     lista: [
       { id: "bianca", nome: "Bianca", colore: "#f2f2ee", bordo: true, stato: "in cantiere", aggiornato: "", note: "" },
