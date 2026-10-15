@@ -237,6 +237,137 @@ window.TECNICHE = [];
     sicurezza: "Niente peso sul collo. Uke batte quando non riesce a uscire: tori allenta subito."
   });
 
+  // 2° kyo (presa destra)
+  const FOND = "Presa fondamentale: destra al bavero, sinistra alla manica all'altezza del gomito.";
+  T.push({
+    id: "ko-soto-gari", nome: "Ko soto gari", gruppo: "Ashi waza", kyo: "2° kyo",
+    sign: "Piccola falciata esterna: si falcia da dietro il tallone di uke, da fuori.",
+    quando: "Quando uke porta il peso sul tallone destro, per esempio mentre indietreggia o ruota verso destra.",
+    presa: FOND,
+    passi: [
+      { titolo: "Posizione", testo: "Shizen tai. Avvicinati con il piede destro un poco a destra, davanti al piede destro di uke." },
+      { titolo: "Kuzushi", testo: "Spingi uke all'indietro e verso la sua destra: il bavero spinge, la manica scende. Il peso va sul suo tallone destro." },
+      { titolo: "Tsukuri", testo: "Peso sul tuo piede destro, busto vicino a uke e appena inclinato in avanti. Il piede sinistro è pronto, la gamba sciolta." },
+      { titolo: "Kake", testo: "Con la **pianta** del piede sinistro aggancia da dietro il tallone destro di uke e spazzalo nella direzione delle sue dita, mentre le mani continuano a spingere in diagonale indietro. Uke cade all'indietro." }
+    ],
+    errori: ["Agganciare il polpaccio invece del tallone", "Falciare quando il peso di uke non è sul tallone", "Mani ferme: è la spinta che fa cadere", "Busto lontano da uke"],
+    uchikomi: ["Aggancio del tallone a vuoto, 10 volte", "Con uke che indietreggia: aggancio al terzo passo", "Alternare con o soto gari sullo stesso squilibrio"],
+    collegamenti: ["Ko soto gari → O soto gari", "Ko uchi gari → Ko soto gari", "Ko soto gari → Tai otoshi (se uke avanza)"],
+    sicurezza: "Si aggancia il tallone con la pianta, non si calcia la caviglia. Uke fa ushiro ukemi con il mento al petto."
+  });
+  T.push({
+    id: "ko-uchi-gari", nome: "Ko uchi gari", gruppo: "Ashi waza", kyo: "2° kyo",
+    sign: "Piccola falciata interna: si falcia da dentro il tallone di uke.",
+    quando: "Quando uke porta avanti il piede destro e ci mette il peso, o quando sta largo a gambe aperte.",
+    presa: FOND,
+    passi: [
+      { titolo: "Posizione", testo: "Shizen tai, vicino a uke. Il tuo piede sinistro va un poco avanti per avvicinarti." },
+      { titolo: "Kuzushi", testo: "Spingi uke all'indietro e verso la sua destra, abbassando un poco le mani: il peso va sul suo tallone destro." },
+      { titolo: "Tsukuri", testo: "Peso sul piede sinistro, busto dritto vicino al suo petto. Il piede destro si prepara **tra** i piedi di uke." },
+      { titolo: "Kake", testo: "Con la pianta del piede destro aggancia da dentro il tallone destro di uke e spazzalo verso le sue dita, cioè in avanti per lui. Le mani spingono in giù e indietro: uke cade all'indietro." }
+    ],
+    errori: ["Falciare con il collo del piede o con le dita", "Spazzare verso l'esterno invece che in avanti", "Busto inclinato in avanti: uke ti trascina", "Non seguire uke nella caduta"],
+    uchikomi: ["Aggancio a vuoto a ritmo, alternando i lati", "Con uke che avanza il destro, aggancio a tempo", "Catena ko uchi gari → seoi nage"],
+    collegamenti: ["Ko uchi gari → Ippon seoi nage (se uke ritira la gamba)", "Ko uchi gari → O uchi gari", "Ko uchi gari → Ko soto gari"],
+    sicurezza: "Si spazza il tallone, mai la caviglia di lato. Tori accompagna con la manica; uke batte all'indietro."
+  });
+  T.push({
+    id: "koshi-guruma", nome: "Koshi guruma", gruppo: "Koshi waza", kyo: "2° kyo",
+    sign: "Ruota sull'anca: uke gira sopra l'anca di tori, che lo tiene attorno al collo.",
+    quando: "Quando uke è dritto o ti spinge con il busto avanti.",
+    presa: "Mano sinistra alla manica; il braccio destro passa attorno al collo di uke (o dietro la spalla).",
+    passi: [
+      { titolo: "Presa e posizione", testo: "Dalla presa fondamentale porta il braccio destro attorno al collo di uke, il gomito vicino alla sua spalla sinistra." },
+      { titolo: "Kuzushi", testo: "Tira la manica in avanti e in alto e attira la testa di uke con il braccio: va in avanti, sulle punte." },
+      { titolo: "Tsukuri", testo: "Passo col destro davanti al suo destro, ruota e porta il sinistro tra i suoi piedi. L'anca destra va **oltre** il suo fianco destro, più in profondità che in o goshi. Ginocchia piegate." },
+      { titolo: "Kake", testo: "Distendi le gambe, gira il busto a sinistra e tira la manica: uke ruota sopra l'anca come una ruota e cade davanti a te." }
+    ],
+    errori: ["Anca non abbastanza avanti: uke scivola dietro", "Stringere il collo invece di guidare la testa", "Piedi fuori dai piedi di uke", "Busto dritto alla fine: niente rotazione"],
+    uchikomi: ["Entrata a vuoto con anca oltre il fianco di uke", "Entrata e sollevamento senza proiettare", "Confronto con o goshi: stessa entrata, presa e anca diverse"],
+    collegamenti: ["Koshi guruma → Harai goshi", "O goshi → Koshi guruma", "Contro-tecnica: Ushiro goshi"],
+    sicurezza: "Il braccio guida la testa, non strangola. Tori tiene la manica; uke fa la caduta laterale."
+  });
+  T.push({
+    id: "tsurikomi-goshi", nome: "Tsurikomi goshi", gruppo: "Koshi waza", kyo: "2° kyo",
+    sign: "Anca con trazione e sollevamento: la mano al bavero solleva (tsuri), la manica tira (komi), l'anca entra bassa.",
+    quando: "Quando uke è dritto o alto, o tiene il busto lontano da te.",
+    presa: "Presa fondamentale; la mano destra resta al bavero e, entrando, il gomito sale sotto l'ascella di uke.",
+    passi: [
+      { titolo: "Posizione", testo: "Shizen tai, presa fondamentale salda al bavero." },
+      { titolo: "Kuzushi", testo: "Solleva con il bavero e tira la manica in avanti: uke va in avanti, sulle punte. Il tuo gomito destro spinge in alto sotto la sua ascella." },
+      { titolo: "Tsukuri", testo: "Ruota entrando con le anche **sotto** la cintura di uke: piedi tra i suoi, ginocchia molto piegate, schiena contro il suo ventre." },
+      { titolo: "Kake", testo: "Distendi le gambe, continua a sollevare con il bavero e a tirare la manica, gira il busto a sinistra: uke passa sopra le anche e cade davanti." }
+    ],
+    errori: ["Entrare alti: le anche non vanno sotto quelle di uke", "Gomito destro basso: manca il sollevamento", "Spingere con la schiena invece di distendere le gambe", "Lasciare il bavero entrando"],
+    uchikomi: ["Entrata bassa a vuoto con il gomito che sale", "Entrata con uke che si lascia caricare", "Variante con la presa alla manica: sode tsurikomi goshi"],
+    collegamenti: ["Tsurikomi goshi → Ko uchi gari (se uke si abbassa)", "Ko uchi gari → Tsurikomi goshi", "Tsurikomi goshi → Harai goshi"],
+    sicurezza: "Si solleva con le gambe, schiena dritta. Tori tiene la manica fino a terra."
+  });
+  T.push({
+    id: "okuri-ashi-barai", nome: "Okuri ashi barai", gruppo: "Ashi waza", kyo: "2° kyo",
+    sign: "Spazzata dei due piedi in movimento laterale: si spinge un piede di uke contro l'altro e li si spazza insieme.",
+    quando: "Quando uke si sposta di lato con passi accostati (tsugi ashi), un attimo prima che i suoi piedi si avvicinino.",
+    presa: FOND,
+    passi: [
+      { titolo: "Movimento", testo: "Tori e uke si spostano di lato insieme, uke verso la sua sinistra, con passi accostati. Le mani accompagnano il ritmo." },
+      { titolo: "Kuzushi", testo: "Mentre uke porta il piede destro verso il sinistro, sollevalo un poco con le mani e accelera il suo movimento di lato." },
+      { titolo: "Tsukuri", testo: "Peso sul tuo piede destro, busto dritto, gamba sinistra tesa e rilassata, pronta a spazzare." },
+      { titolo: "Kake", testo: "Con la pianta del piede sinistro spazza la caviglia destra di uke **nella stessa direzione** in cui si muove, spingendola contro il suo piede sinistro: i due piedi partono insieme. Le mani sollevano e girano: uke cade di fianco." }
+    ],
+    errori: ["Spazzare verso uke invece che nella direzione del movimento", "Gamba piegata o spazzata con il tallone", "Arrivare tardi: i piedi di uke sono già accostati e fermi", "Mani che tirano in basso"],
+    uchikomi: ["Spostamenti laterali in coppia, tocco a tempo senza proiettare", "Spazzata a vuoto con la gamba tesa", "Alternare de ashi barai (avanti) e okuri ashi barai (di lato)"],
+    collegamenti: ["De ashi barai → Okuri ashi barai", "Okuri ashi barai → Harai tsurikomi ashi"],
+    sicurezza: "Si spazza con la pianta. Uke fa yoko ukemi; tori trattiene la manica."
+  });
+  T.push({
+    id: "tai-otoshi", nome: "Tai otoshi", gruppo: "Te waza", kyo: "2° kyo",
+    sign: "Caduta del corpo: la gamba di tori blocca lo stinco di uke e le braccia lo fanno cadere in avanti.",
+    quando: "Quando uke avanza o resiste spingendo in avanti con il peso sul piede destro.",
+    presa: FOND,
+    passi: [
+      { titolo: "Posizione", testo: "Shizen tai. Meglio se uke viene avanti con il destro." },
+      { titolo: "Kuzushi", testo: "Tira la manica in avanti e verso il basso, il bavero spinge in avanti e in alto: uke va in avanti-destra, sulle punte." },
+      { titolo: "Tsukuri", testo: "Porta il destro davanti al suo destro e ruota, con il sinistro indietro: sei girato quasi di spalle. Poi stendi la gamba destra davanti allo **stinco destro** di uke, ginocchio leggermente piegato." },
+      { titolo: "Kake", testo: "Ruota il busto a sinistra e tira le braccia verso il basso come girando un volante. Uke inciampa sulla tua gamba e cade davanti a te. Le anche non toccano uke: è una te waza." }
+    ],
+    errori: ["Caricare uke sull'anca: diventa una koshi waza fatta male", "Gamba bloccante troppo alta, sul ginocchio", "Braccia che non ruotano", "Piede d'appoggio troppo vicino: non c'è spazio per cadere"],
+    uchikomi: ["Entrata con il blocco della gamba, senza proiettare", "Rotazione delle braccia a vuoto con l'elastico", "Con uke che avanza, a tempo"],
+    collegamenti: ["O uchi gari → Tai otoshi (se uke avanza)", "Ko soto gari → Tai otoshi", "Tai otoshi → Ko soto gari (se uke indietreggia)"],
+    sicurezza: "La gamba blocca lo stinco, non colpisce il ginocchio. Tori tiene la manica; uke fa la caduta in avanti arrotolata."
+  });
+  T.push({
+    id: "harai-goshi", nome: "Harai goshi", gruppo: "Koshi waza", kyo: "2° kyo",
+    sign: "Anca spazzata: tori carica uke sull'anca e con la gamba spazza la sua coscia.",
+    quando: "Quando uke è dritto o avanza, e ha il peso in avanti.",
+    presa: "Mano sinistra alla manica; la destra al bavero o dietro la schiena di uke.",
+    passi: [
+      { titolo: "Posizione", testo: "Shizen tai, presa salda. Petto vicino a uke." },
+      { titolo: "Kuzushi", testo: "Tira la manica in avanti e in alto, il braccio destro attira uke a te: va in avanti-destra, sulle punte." },
+      { titolo: "Tsukuri", testo: "Ruota portando i piedi davanti ai suoi, peso sul **piede sinistro**. Anca destra contro di lui, fianco a fianco." },
+      { titolo: "Kake", testo: "La gamba destra, tesa, spazza all'indietro l'esterno della coscia destra di uke, mentre il busto ruota a sinistra e scende e la manica tira. Uke viene spazzato via dall'anca e cade davanti." }
+    ],
+    errori: ["Spazzare con la gamba piegata", "Spazzare prima di aver caricato uke", "Piede d'appoggio lontano: perdi l'equilibrio", "Testa che guarda indietro"],
+    uchikomi: ["Entrata e gamba in posizione, senza spazzare", "Equilibrio su una gamba con la spazzata lenta", "Entrata con uke che cammina in avanti"],
+    collegamenti: ["Uki goshi → Harai goshi", "Ko uchi gari → Harai goshi", "Contro-tecniche: Harai goshi gaeshi, Ushiro goshi"],
+    sicurezza: "Tori resta in piedi sulla gamba d'appoggio e tiene la manica. Uke fa la caduta laterale."
+  });
+  T.push({
+    id: "uchi-mata", nome: "Uchi mata", gruppo: "Ashi waza", kyo: "2° kyo",
+    sign: "Falciata all'interno della coscia: la gamba di tori sale tra le gambe di uke e lo solleva.",
+    quando: "Quando uke ha il peso in avanti, sta a gambe aperte o si piega in avanti.",
+    presa: FOND,
+    passi: [
+      { titolo: "Posizione", testo: "Shizen tai, presa salda; muoviti in cerchio per far aprire le gambe a uke." },
+      { titolo: "Kuzushi", testo: "Tira la manica in avanti e in alto, il bavero solleva: uke va in avanti, sulle punte." },
+      { titolo: "Tsukuri", testo: "Ruota portando il piede sinistro tra i piedi di uke, peso sul sinistro e busto che si inclina in avanti. Sei di spalle, vicino a lui." },
+      { titolo: "Kake", testo: "La gamba destra sale tra le gambe di uke e falcia l'**interno della sua coscia sinistra**, verso l'alto e indietro. Il busto scende e gira a sinistra, la manica tira: uke viene sollevato e cade davanti a te." }
+    ],
+    errori: ["Falciare con il ginocchio piegato", "Calciare il basso ventre invece della coscia", "Busto dritto: la gamba non sale", "Saltare sul piede d'appoggio perdendo l'equilibrio"],
+    uchikomi: ["Entrata a vuoto con il busto in avanti e la gamba che sale", "Equilibrio sul sinistro con la gamba alta", "Entrata in movimento circolare con uke"],
+    collegamenti: ["O uchi gari → Uchi mata", "Uchi mata → Ko uchi gari (se uke chiude le gambe)", "Contro-tecnica: Uchi mata sukashi"],
+    sicurezza: "La gamba sale sulla coscia, non colpisce l'inguine. Tori tiene la manica; uke fa la caduta laterale."
+  });
+
   // schemi dall'alto (pianta.js): tori in blu parte in basso, uke in bianco in alto
   const start = {
     tori: { c: [0, 0], sx: [-14, -4], dx: [14, -4], etichetta: [0, -24] },
