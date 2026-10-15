@@ -63,6 +63,7 @@
         { href: "#/teoria", label: "Teoria", text: "Storia, principi, Gokyo, kata, regole di gara" },
         { href: me ? `#/cinture/${me.id}` : "#/cinture", label: me ? `Cintura ${me.nome.toLowerCase()}` : "Cinture", text: `Programmi per cintura (${B.anno}): in cantiere` },
         { href: "#/tecniche", label: "Tecniche", text: "Schede passo per passo con disegni e video" },
+        { href: "#/quiz", label: "Quiz", text: "Gioca con i nomi giapponesi e metti alla prova la memoria" },
         { href: "#/glossario", label: "Glossario", text: "Il significato dei termini giapponesi" },
         { href: "#/dojo", label: "Dojo", text: "Orari, palestra e appuntamenti" }
       ])}`;
@@ -77,6 +78,11 @@
       res.innerHTML = all.length ? all.join("") : `<p class="small">Nessun risultato.</p>`;
       res.querySelectorAll(".chip-open").forEach(b => b.addEventListener("click", () => window.R.sheet.open(G.find(g => norm(g.t) === b.dataset.term))));
     });
+  }
+
+  function quizPage() {
+    app.innerHTML = head("Gioca", "Quiz", "", ["#/", "Home"]) + `<div id="quiz"></div>`;
+    window.Quiz.start(app.querySelector("#quiz"));
   }
 
   function profiloPage() {
@@ -377,7 +383,7 @@
   function miniGloss(page) {
     document.querySelectorAll(".gpanel, .gfab").forEach(x => x.remove());
     document.body.classList.remove("has-gp");
-    if (page === "glossario" || page === "info" || page === "profilo") return;
+    if (page === "quiz" || page === "glossario" || page === "info" || page === "profilo") return;
     const hdr = app.querySelector("header");
     if (!hdr) return;
     const tw = document.createTreeWalker(app, NodeFilter.SHOW_TEXT), parts = [];
@@ -416,6 +422,7 @@
     else if (a === "teoria") b ? teoriaPage(b) : teoria();
     else if (a === "cinture") b ? cintura(b) : cinture();
     else if (a === "glossario") glossario();
+    else if (a === "quiz") quizPage();
     else if (a === "tecniche") b ? tecnica(b) : tecniche();
     else if (a === "dojo") dojo();
     else if (a === "profilo") profiloPage();
