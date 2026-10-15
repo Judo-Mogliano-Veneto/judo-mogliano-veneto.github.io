@@ -13,7 +13,7 @@
   const MODI = [
     { id: "termini", nome: "Parole del dojo", txt: "Saluti, cadute, numeri, principi: cosa significano?", ico: "🥋" },
     { id: "tecniche", nome: "Nomi delle tecniche", txt: "Cosa vuol dire il nome giapponese di ogni tecnica?", ico: "🌀" },
-    { id: "trabocchetti", nome: "Trabocchetti", txt: "Domande secche e bastarde: occhio alle parole!", ico: "🪤" },
+    { id: "trabocchetti", nome: "Trabocchetti", txt: "Domande secche ed infami", ico: "🪤" },
     { id: "gruppi", nome: "Gruppo e kyo", txt: "A che gruppo e a che kyo appartiene la tecnica?", ico: "🎯" },
     { id: "misto", nome: "Tutto mescolato", txt: "Un po' di tutto: la sfida completa.", ico: "⭐" }
   ];
