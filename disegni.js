@@ -926,7 +926,7 @@
           uke: { pelvis: [70, 90, 0], yaw: 180, lean: -20, tilt: 10, piedi: { dx: [64, 0, -13], sx: [62, 0, 13] }, mani: { dx: [52, 122, -19], sx: [48, 108, 20] } },
           frecce: [{ da: [66, 4, -30], a: [92, 4, 8], col: ROSSO }] },
         { tori: { pelvis: [66, 14, -30], yaw: -90, lean: 20, tilt: -50, piedi: { dx: [56, 6, -30], sx: [96, 4, 14] }, ginocchio: { dx: [0, 1, 0], sx: [0, 1, 0] }, mani: { dx: [60, 40, -10], sx: [76, 50, 14] } },
-          uke: { pelvis: [82, 50, 4], yaw: 180, lean: -66, tilt: 6, piedi: { dx: [60, 24, -13], sx: [64, 28, 15] }, mani: { dx: [90, 20, -19], sx: [96, 30, 20] } },
+          uke: { pelvis: [100, 34, -6], yaw: 180, lean: -62, tilt: 4, piedi: { dx: [62, 46, -13], sx: [64, 38, 13] }, ginocchio: { dx: [0, 1, 0], sx: [0, 1, 0] }, mani: { dx: [128, 20, -19], sx: [126, 24, 20] } },
           frecce: [{ da: [80, 110, 6], a: [110, 40, 6] }] }
       ] }
     };
@@ -1049,7 +1049,7 @@
         { tori: { c: [-44, 62], rot: -90, dx: [4, 66, -90], sx: [-44, 72, -90], etichetta: [-44, 28] }, uke: { ...P0.uke, busto: [0, 52] },
           prese: [{ da: [-44, 66], a: [6, 76] }, { da: [-44, 58], a: [-4, 52] }],
           frecce: [{ da: [-40, 50], a: [6, 62], tipo: "falciata", testo: "gamba destra tra le sue", tx: -90, ty: 36, curva: -.2 }] },
-        { tori: { terra: true, testa: [-100, 62], bacino: [-36, 62], etichetta: [-70, 28] }, uke: { terra: true, testa: [-150, 120], bacino: [-80, 120], etichetta: [-120, 150] },
+        { tori: { terra: true, testa: [-100, 62], bacino: [-36, 62], etichetta: [-70, 20] }, uke: { terra: true, testa: [-150, 120], bacino: [-80, 120], etichetta: [-120, 150] },
           frecce: [{ da: [0, 80], a: [-110, 110], tipo: "caduta", testo: "ruota sopra tori", curva: .3, tx: -60, ty: 100 }] }
       ],
       lato: { cam: { yaw: -68, pitch: 10 }, passi: [
@@ -1116,7 +1116,7 @@
           uke: { pelvis: [64, 90, -14], yaw: 180, lean: 10, tilt: 12, piedi: { dx: [64, 0, -30], sx: [62, 0, 0] }, mani: { dx: [48, 124, -34], sx: [44, 110, 8] } },
           frecce: [{ da: [74, 3, -62], a: [66, 3, -34], col: ROSSO }] },
         { tori: { pelvis: [74, 14, -62], yaw: -90, lean: 10, tilt: -70, piedi: { dx: [54, 4, -60], sx: [66, 4, -30] }, ginocchio: { dx: [0, 1, 0], sx: [0, 1, 0] }, mani: { dx: [60, 50, -40], sx: [76, 50, -20] } },
-          uke: { pelvis: [64, 60, -50], yaw: 180, lean: 6, tilt: 70, piedi: { dx: [64, 50, -70], sx: [64, 40, -20] }, mani: { dx: [50, 70, -90], sx: [50, 70, -40] } },
+          uke: { pelvis: [64, 72, -30], yaw: 180, lean: 6, tilt: 75, piedi: { dx: [64, 64, 14], sx: [64, 72, 30] }, ginocchio: { dx: [0, 1, 0], sx: [0, 1, 0] }, mani: { dx: [50, 60, -86], sx: [50, 66, -70] } },
           frecce: [{ da: [64, 120, -20], a: [64, 70, -100] }] }
       ] }
     };
