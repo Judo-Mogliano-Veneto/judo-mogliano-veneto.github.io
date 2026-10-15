@@ -245,7 +245,7 @@
   const VX = {}; Object.entries(window.VIDEO_EXTRA || {}).forEach(([k, v]) => { VX[norm(k)] = v; });
   const extraDi = name => VX[norm(name)] || VX[norm(String(name).replace(/shio/i, "shiho"))] || null;
   const videoBase = name => VN[norm(VA[name] || name)] || VN[norm(String(name).replace(/shio/i, "shiho"))] || null;
-  const guidaDi = g => TE.find(t => norm(t.nome) === norm(g.t));
+  const guidaDi = g => TE.find(t => norm(t.nome) === norm(g.t) || (t.alias || []).some(a => norm(a) === norm(g.t)));
   const voci = () => G.filter(g => CATALOGO.some(c => c[0] === g.cat) && !/^(Seoi nage|Morote)/.test(g.t));
   const videoDi = name => { const x = extraDi(name); return videoBase(name) || (x && (x.id || videoBase(x.rif))) || null; };
   const videoBox = (id, name) => id ? `<div class="yt" data-yt="${esc(id)}"><button type="button" class="yt-play" aria-label="Guarda il video di ${esc(name)}"><span class="yt-ico">▶</span><b>Guarda il video del Kodokan</b><small>Si carica qui solo quando tocchi. Serve la rete.</small></button></div><p class="small"><a href="https://www.youtube.com/watch?v=${esc(id)}" target="_blank" rel="noopener noreferrer">Apri su YouTube ↗</a></p>` : `<div class="callout"><b>Video non disponibile</b><p>Il Kodokan non ha un video di questa tecnica nel suo elenco. Si può aggiungere in <code>video.js</code>.</p></div>`;
@@ -299,7 +299,7 @@
   const ul = items => `<div class="card"><ul>${items.map(i => `<li>${rich(i)}</li>`).join("")}</ul></div>`;
   function tecnica(slug) {
     const g = G.find(x => norm(x.t) === slug) || G.find(x => norm(x.t) === norm(slug));
-    const t = TE.find(x => norm(x.nome) === slug || x.id === slug);
+    const t = TE.find(x => norm(x.nome) === slug || x.id === slug) || (g && guidaDi(g));
     if (!g && !t) return notFound();
     const nome = t ? t.nome : g.t, vid = videoDi(nome);
     const sign = t ? t.sign : g.d;
@@ -307,11 +307,12 @@
     let body = `<label class="know"><input type="checkbox" data-key="sa:${esc(norm(nome))}"> La so fare</label>
       <h3 class="sub">Video</h3>${videoBox(vid, nome).replace(/Guarda il video del Kodokan(?=<\/b>)/, extraDi(nome) && extraDi(nome).id ? "Guarda il video" : "Guarda il video del Kodokan")}${extraDi(nome) ? `<p class="small">${esc(extraDi(nome).nota)}</p>` : ""}`;
     if (t) {
-      body += `<div class="card"><b>Quando si usa</b><p>${rich(t.quando)}</p><b>Presa</b><p>${rich(t.presa)}</p></div>
+      if (t.vietata) body += block({ type: "callout", tone: "warn", title: "Tecnica vietata", text: "Vietata in gara e da non provare in allenamento. Questa scheda serve solo a conoscerla." });
+      body += `<div class="card"><b>Quando si usa</b><p>${rich(t.quando)}</p>${t.presa && t.presa !== "—" ? `<b>Presa</b><p>${rich(t.presa)}</p>` : ""}</div>
         <h3 class="sub">I passi</h3>${passi(t)}
         <h3 class="sub">Errori comuni</h3>${ul(t.errori)}
-        <h3 class="sub">Come allenarla</h3>${ul(t.uchikomi)}
-        <h3 class="sub">Collegamenti</h3>${ul(t.collegamenti)}
+        <h3 class="sub">${t.vietata ? "Allenamento" : "Come allenarla"}</h3>${ul(t.uchikomi)}
+        ${t.collegamenti.length ? `<h3 class="sub">Collegamenti</h3>${ul(t.collegamenti)}` : ""}
         ${block({ type: "callout", tone: "warn", title: "Sicurezza", text: t.sicurezza })}
         <p class="small">Scheda versione 1, scritta per chi usa la presa destra: da confrontare con ciò che spiega il maestro.</p>`;
     } else {

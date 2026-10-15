@@ -15,7 +15,7 @@ window.TECNICHE = [];
   });
 
   T.push({
-    id: "ippon-seoi-nage", nome: "Ippon seoi nage", gruppo: "Te waza", kyo: "1° kyo",
+    id: "ippon-seoi-nage", nome: "Ippon seoi nage", alias: ["Seoi nage"], gruppo: "Te waza", kyo: "1° kyo",
     passi: [{ titolo: "Presa e posizione" }, { titolo: "Kuzushi" }, { titolo: "Tsukuri" }, { titolo: "Kake" }]
   });
 
@@ -75,7 +75,7 @@ window.TECNICHE = [];
 
   // tecniche a terra
   T.push({
-    id: "hon-kesa-gatame", nome: "Hon kesa gatame", gruppo: "Osaekomi waza", kyo: "",
+    id: "hon-kesa-gatame", nome: "Hon kesa gatame", alias: ["Kesa gatame"], gruppo: "Osaekomi waza", kyo: "",
     sign: "Controllo a sciarpa (kesa = la stola del monaco): il controllo di base per l'immobilizzazione.",
     quando: "Quando uke è sulla schiena e tu sei seduto accanto al suo torace.",
     presa: "Un braccio blocca il braccio di uke contro il tuo fianco, l'altro passa sotto la nuca e afferra il bavero.",
@@ -367,6 +367,35 @@ window.TECNICHE = [];
     collegamenti: ["O uchi gari → Uchi mata", "Uchi mata → Ko uchi gari (se uke chiude le gambe)", "Contro-tecnica: Uchi mata sukashi"],
     sicurezza: "La gamba sale sulla coscia, non colpisce l'inguine. Tori tiene la manica; uke fa la caduta laterale."
   });
+
+  // tecniche vietate: scheda informativa, senza esecuzione passo per passo
+  const VIET = (id, nome, gruppo, sign, cosa, perche) => T.push({
+    id, nome, gruppo, kyo: "vietata in gara", vietata: true, sign,
+    quando: "Non si usa in randori né in gara. Si conosce per cultura tecnica e per riconoscerla.",
+    presa: "—",
+    passi: [
+      { titolo: "Cos'è", testo: cosa },
+      { titolo: "Perché è vietata", testo: perche },
+      { titolo: "Dove si studia", testo: "Fa parte dell'elenco delle tecniche del Kodokan, ma si vede solo come dimostrazione, lentamente e con un maestro." },
+      { titolo: "In allenamento", testo: "Non provarla con i compagni. Se ti capita una situazione simile in randori, fermati e chiedi al maestro." }
+    ],
+    errori: ["Provarla in randori o per gioco", "Confonderla con una tecnica ammessa simile"],
+    uchikomi: ["Nessun esercizio: si studia solo guardando il video e la spiegazione del maestro"],
+    collegamenti: [],
+    sicurezza: "Tecnica vietata in gara dal regolamento IJF e pericolosa per le articolazioni o la colonna di uke."
+  });
+  VIET("kani-basami", "Kani basami", "Yoko sutemi waza", "Proiezione a forbice (kani = granchio): le gambe di tori chiudono uke come le chele di un granchio.",
+    "Tori si lancia di fianco e chiude con le gambe il busto o le gambe di uke, una davanti e una dietro, facendolo cadere all'indietro.",
+    "Uke cade all'indietro con le gambe bloccate e non può fare una caduta corretta: il rischio per il ginocchio e la gamba è alto. È vietata in gara e anche nei randori.");
+  VIET("kawazu-gake", "Kawazu gake", "Yoko sutemi waza", "Aggancio a rana (kawazu = rana): la gamba di tori si avvolge attorno a quella di uke.",
+    "Tori avvolge la propria gamba attorno alla gamba di uke, da dentro verso fuori, e si lascia cadere all'indietro trascinandolo.",
+    "Le due gambe restano intrecciate durante la caduta e il ginocchio di uke può subire una torsione grave. È vietata in gara.");
+  VIET("do-jime", "Do jime", "Shime waza", "Strangolamento del tronco (do = tronco): si stringe il busto di uke tra le gambe.",
+    "Tori chiude le gambe incrociate attorno al tronco (o ai reni) di uke e stringe.",
+    "Comprime il torace e gli organi interni invece del collo: può fare male alle costole e ai reni. È vietata in gara.");
+  VIET("ashi-garami", "Ashi garami", "Kansetsu waza", "Leva con intreccio delle gambe (ashi = gamba, garami = intreccio).",
+    "Tori intreccia le gambe con quelle di uke e mette in leva il suo ginocchio.",
+    "In gara sono permesse solo le leve al gomito: le leve a ginocchio, caviglia e altre articolazioni sono vietate perché le lesioni sono gravi. Compare nel Katame no kata solo come dimostrazione.");
 
   // schemi dall'alto (pianta.js): tori in blu parte in basso, uke in bianco in alto
   const start = {
