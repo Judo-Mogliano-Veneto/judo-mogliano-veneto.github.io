@@ -21,7 +21,9 @@ window.DOJO = {
 
 /* Crediti e informazioni legali: vale per tutta l'app. */
 window.INFO = {
-  autore: "Marco (Maeco96)",
+  autore: "Marco Campodall'Orto",
+  account: "Maeco96",
+  licenza: "MIT",
   anno: 2026,
   versione: "2026-10-15",
   repo: "https://github.com/Maeco96/judo-Mogliano"

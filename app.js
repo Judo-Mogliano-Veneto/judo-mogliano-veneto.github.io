@@ -95,7 +95,7 @@
   function infoPage() {
     const I = window.INFO;
     app.innerHTML = head("Informazioni", "Crediti e note legali", "", ["#/", "Home"]) + `<div class="stack">
-      ${block({ type: "callout", tone: "info", title: "Ideata e realizzata da " + I.autore, text: `Progetto, contenuti e coordinamento: **${I.autore}**. L'app è stata sviluppata con l'assistenza di Claude (Anthropic). Versione ${I.versione}. Codice: ${I.repo}` })}
+      ${block({ type: "callout", tone: "info", title: "Ideata e realizzata da " + I.autore, text: `Progetto, contenuti e coordinamento: **${I.autore}** (${I.account}). L'app è stata sviluppata con l'assistenza di Claude (Anthropic). Versione ${I.versione}. Codice: ${I.repo}` })}
       <h3 class="sub">Privacy</h3>${block({ type: "text", text: "L'app **non raccoglie dati**, non usa cookie né statistiche e non ha account. Profilo, spunte, diario e movimenti aggiunti restano nella memoria del tuo telefono e si cancellano se cancelli i dati del sito." })}
       <h3 class="sub">Fonti</h3>${block({ type: "list", items: [
         "Programmi di cintura del dojo di Mogliano Veneto (Judo e Ju Jitsu), secondo i programmi FIJLKAM",
@@ -107,7 +107,7 @@
       <h3 class="sub">Avvertenze</h3>${block({ type: "callout", tone: "warn", items: [
         "Le informazioni di judo sono un ripasso: per esami e gare vale quello che insegna il maestro e il regolamento ufficiale in vigore.",
         "Il programma post-LASIK è una scheda personale, non un parere medico: ogni ripresa dell'attività va concordata con l'oculista."] })}
-      <h3 class="sub">Diritti</h3>${block({ type: "text", text: `© ${I.anno} ${I.autore}. Testi, disegni e codice originali dell'app: tutti i diritti riservati salvo diversa licenza indicata nel repository.` })}</div>`;
+      <h3 class="sub">Diritti</h3>${block({ type: "text", text: `© ${I.anno} ${I.autore} (${I.account}). Il codice è rilasciato con licenza ${I.licenza}: si può riutilizzare mantenendo il nome dell'autore e l'avviso di copyright. I testi di judo sono riassunti di fonti di terzi (vedi sopra) e restano dei rispettivi titolari.` })}</div>`;
   }
 
   /* ---------- Allenamenti ---------- */

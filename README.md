@@ -34,3 +34,6 @@ Spunte, diario, movimenti aggiunti e test restano salvati sul telefono.
 
 ## Fonti
 Programmi di cintura FIJLKAM del dojo (Judo e Ju Jitsu), «Aggiornamento del Regolamento IJF 2025–2028», dispensa «I Kata di Judo» (M° Mainenti), «Programma fondamentali Ju Jitsu FIJLKAM».
+
+## Autore e licenza
+Ideata e realizzata da Marco Campodall'Orto (Maeco96). Codice con licenza MIT (vedi `LICENSE`). I testi di judo sono riassunti di fonti di terzi e restano dei rispettivi titolari.
