@@ -387,5 +387,14 @@
   window.addEventListener("hashchange", route);
   route();
 
-  if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => { /* offline non disponibile */ });
+  if ("serviceWorker" in navigator) {
+    // quando arriva una versione nuova dell'app, la pagina si ricarica da sola una volta
+    const prima = !!navigator.serviceWorker.controller;
+    let ricaricata = false;
+    navigator.serviceWorker.addEventListener("controllerchange", () => { if (prima && !ricaricata) { ricaricata = true; location.reload(); } });
+    navigator.serviceWorker.register("sw.js", { updateViaCache: "none" }).then(r => {
+      r.update();
+      document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") r.update(); });
+    }).catch(() => { /* offline non disponibile */ });
+  }
 })();
