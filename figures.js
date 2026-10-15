@@ -60,8 +60,9 @@
     const u = dv(psi);
     const hip = p.sh ? sub(p.sh, mul(u, TL)) : p.hip;
     const sh = p.sh ? p.sh : add(hip, mul(u, TL));
-    const l = [u[1], -u[0]];                 // lateral/forward vector (+side "1")
-    const S = { p, front, psi, u, l, hip, sh, tag, legs: {}, arms: {}, plates: [], pts: [] };
+    const flip = !!p.flip;                   // figura rivolta a sinistra (-x)
+    const l = flip ? [-u[1], u[0]] : [u[1], -u[0]];                 // lateral/forward vector (+side "1")
+    const S = { p, front, flip, psi, u, l, hip, sh, tag, legs: {}, arms: {}, plates: [], pts: [] };
     S.hdir = p.hh ?? (psi + (p.hd || 0));
     S.nk = add(add(sh, mul(u, 2)), mul(dv(S.hdir), NK));
     S.hc = add(S.nk, mul(dv(S.hdir), 8));
@@ -137,10 +138,10 @@
     for (let i = N; i >= 0; i--) { const t = t0 + (t1 - t0) * i / N; pts.push(add(add(S.hip, mul(S.u, TL * t)), mul(S.l, side * (edge(t) - thick)))); }
     return [{ t: "p", pts }];
   }
-  function shoe(an, d, front) {
+  function shoe(an, d, front, flip) {
     const loc = front ? [[-8, -9], [8, -9], [9.5, -4], [6, 3], [-6, 3], [-9.5, -4]]
       : [[-6, -9], [17, -9], [21, -6.5], [20, -2], [11, 0.5], [6, 5.5], [-3, 5.5], [-6.5, 0]];
-    const dd = front ? [1, 0] : dv(d), nn = rot(dd);
+    const dd = front ? [1, 0] : dv(d), nn = flip ? mul(rot(dd), -1) : rot(dd);
     return [{ t: "p", pts: loc.map(q => add(an, add(mul(dd, q[0]), mul(nn, q[1])))) }];
   }
   function hand(wr, hd) {
@@ -186,22 +187,28 @@
       const skin = seg(g.hj, g.kn, P_THIGH, 0, 1).concat(seg(g.kn, g.an, P_SHIN, 0, 1));
       let s = paint(skin, C[0]);
       s += paint(seg(g.hj, g.kn, P_THIGH.map(q => [q[0], q[1] + 2.2]), 0, .5, false), C[1], false);
-      s += paint(shoe(g.an, g.d, front), C[2]);
+      if (ex.gi) {   // pantaloni del judogi: coprono coscia e parte alta dello stinco
+        s += paint(seg(g.hj, g.kn, P_THIGH.map(q => [q[0] + 2.4, q[1] + 2.4]), 0, 1, true).concat(seg(g.kn, g.an, P_SHIN.map(q => [q[0] + 2.2, q[1] + 2.2]), 0, .62, true)), C[1], true);
+      }
+      s += paint(shoe(g.an, g.d, front, S.flip), C[2]);
       return s;
     };
     const arm = (k, far) => {
       const g = S.arms[k]; if (!g) return "";
       const C = far ? ["var(--skin-far)", "var(--top-far)"] : ["var(--skin)", "var(--top)"];
       let s = paint(seg(g.sj, g.el, P_UARM, 0, 1).concat(seg(g.el, g.wr, P_FARM, 0, 1)).concat(hand(g.wr, g.hd)), C[0]);
-      s += paint(seg(g.sj, g.el, P_UARM.map(q => [q[0], q[1] + 2]), 0, .45), C[1], false);
+      if (ex.gi) {   // maniche della giacca: braccio e gran parte dell'avambraccio
+        s += paint(seg(g.sj, g.el, P_UARM.map(q => [q[0] + 3, q[1] + 3]), 0, 1, true).concat(seg(g.el, g.wr, P_FARM.map(q => [q[0] + 2.6, q[1] + 2.6]), 0, .78, true)), C[1], true);
+      } else s += paint(seg(g.sj, g.el, P_UARM.map(q => [q[0], q[1] + 2]), 0, .45), C[1], false);
       return s;
     };
     const head = () => {
-      const dd = dv(S.hdir), fwd = [dd[1], -dd[0]];
+      const dd = dv(S.hdir), fwd = S.flip ? [-dd[1], dd[0]] : [dd[1], -dd[0]];
       let s = paint(seg(add(S.sh, mul(S.u, 3)), add(S.nk, mul(dd, 3)), [[0, 10], [1, 8.5]]), "var(--skin)");
       const hc = S.hc;
       const hair = [];
-      const a1 = front ? S.hdir - 85 : S.hdir - 35, a2 = front ? S.hdir + 85 : S.hdir + 150;
+      let a1 = front ? S.hdir - 85 : S.hdir - 35, a2 = front ? S.hdir + 85 : S.hdir + 150;
+      if (S.flip && !front) { a1 = S.hdir - 150; a2 = S.hdir + 35; }
       for (let a = a1; a <= a2; a += 10) hair.push(add(hc, mul(dv(a), HR + 0.9)));
       s += paint([{ t: "c", c: hc, r: HR }], "var(--skin)");
       if (!front) s += paint([{ t: "c", c: add(hc, add(mul(fwd, HR - 0.5), mul(dd, -1.5))), r: 2.2 }], "var(--skin)", false);
@@ -318,5 +325,55 @@
   };
 
 
-  window.Fig = { figure, P, fr, mirror, hang, quad, wgs, cossackL, STD, WARN };
+
+  // ---------- scene a due figure (tori e uke) ----------
+  // Ogni passo ha due pose in coordinate del mondo (cm, y verso l'alto): tori guarda a destra, uke a sinistra (flip).
+  // I bersagli delle mani possono essere stringhe come "@uke.lapel": punti sul busto dell'altra figura.
+  const GI = {
+    tori: "--top:#2f66c4;--top-far:#2552a0;--short:#2a56a8;--short-far:#1f4585;--shoe:#e9c9a8;--shoe-far:#c9a888",
+    uke: "--top:#f4f4ef;--top-far:#d4d4cc;--short:#ebebe4;--short-far:#c9c9c0;--shoe:#e9c9a8;--shoe-far:#c9a888"
+  };
+  function anchors(p) {
+    const u = dv(p.ta ?? 90), hip = p.sh ? sub(p.sh, mul(u, TL)) : p.hip, sh = p.sh ? p.sh : add(hip, mul(u, TL));
+    const l = p.flip ? [-u[1], u[0]] : [u[1], -u[0]], at = (t, side, w) => add(add(hip, mul(u, TL * t)), mul(l, side * w));
+    return { sh, hip, lapel: at(.82, 1, interp(TF, .82) * .9), chest: at(.65, 1, interp(TF, .65)), belt: at(.1, 1, interp(TF, .1)), back: at(.6, -1, interp(TB, .6)),
+      neck: at(1, 0, 0), head: add(add(sh, mul(u, 2)), mul(u, 18)), side: at(.3, 0, 0) };
+  }
+  function resolve(p, other, who) {
+    const q = JSON.parse(JSON.stringify(p));
+    const A = anchors(other);
+    ["w1", "w2"].forEach(k => {
+      if (q[k] && typeof q[k].p === "string") {
+        const m = q[k].p.match(/^@(?:\w+\.)?(\w+)$/);
+        if (!m || !A[m[1]]) throw new Error("bersaglio sconosciuto " + q[k].p);
+        q[k].p = A[m[1]].slice();
+        if (q[k].off) q[k].p = add(q[k].p, q[k].off);
+      }
+    });
+    return q;
+  }
+  function scene(step) {
+    const t0 = Object.assign({ view: "side" }, step.tori), u0 = Object.assign({ view: "side", flip: true, hd: 0 }, step.uke);
+    const tp = resolve(t0, u0, "tori"), up = resolve(u0, t0, "uke");
+    const St = solve(tp, "tori"), Su = solve(up, "uke");
+    let minx = 1e9, maxx = -1e9, miny = 1e9, maxy = -1e9;
+    [St, Su].forEach(S => S.pts.forEach(q => { minx = Math.min(minx, q[0]); maxx = Math.max(maxx, q[0]); miny = Math.min(miny, q[1]); maxy = Math.max(maxy, q[1]); }));
+    (step.arrows || []).forEach(a => [a.from, a.to].forEach(q => { minx = Math.min(minx, q[0] - 6); maxx = Math.max(maxx, q[0] + 6); miny = Math.min(miny, q[1] - 6); maxy = Math.max(maxy, q[1] + 6); }));
+    const Wf = Math.max(230, maxx - minx + 30), Hf = Math.max(150, maxy + 50), cx = (minx + maxx) / 2;
+    const T = q => [Wf / 2 + (q[0] - cx), Hf - 26 - q[1]];
+    const ex = { gi: true, name: step.titolo, _gx: [cx - Wf / 2 + 6, cx + Wf / 2 - 6] };
+    const draw = (S, who) => `<g style="${GI[who]}">${render(S, T, ex)}</g>`;
+    let o = step.front === "uke" ? draw(St, "tori") + draw(Su, "uke") : draw(Su, "uke") + draw(St, "tori");
+    const lab = (S, name) => { const c = T(add(S.hc, [0, 17])); return `<text x="${c[0].toFixed(1)}" y="${c[1].toFixed(1)}" text-anchor="middle" font-size="10" font-weight="700" fill="var(--muted)" font-family="system-ui, sans-serif">${name}</text>`; };
+    o += lab(St, "TORI") + lab(Su, "UKE");
+    (step.arrows || []).forEach(a => {
+      const p0 = T(a.from), p1 = T(a.to), d = sub(p1, p0), L = len(d) || 1, e = mul(d, 1 / L), n = rot(e);
+      const h1 = sub(p1, add(mul(e, 8), mul(n, 5))), h2 = sub(p1, sub(mul(e, 8), mul(n, 5)));
+      o += `<g stroke="var(--hot)" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="M${p0[0].toFixed(1)} ${p0[1].toFixed(1)}L${p1[0].toFixed(1)} ${p1[1].toFixed(1)}"${a.dash ? ' stroke-dasharray="5 4"' : ""}/><path d="M${h1[0].toFixed(1)} ${h1[1].toFixed(1)}L${p1[0].toFixed(1)} ${p1[1].toFixed(1)}L${h2[0].toFixed(1)} ${h2[1].toFixed(1)}"/></g>`;
+      if (a.label) o += `<text x="${(p1[0] + 4).toFixed(1)}" y="${(p1[1] - 6).toFixed(1)}" font-size="10" font-weight="700" fill="var(--hot)" font-family="system-ui, sans-serif">${a.label}</text>`;
+    });
+    return `<svg viewBox="0 0 ${Wf.toFixed(0)} ${Hf.toFixed(0)}" style="max-width:${Math.round(Wf * 1.9)}px;margin-inline:auto" role="img" aria-label="${(step.titolo || "").replace(/"/g, "")}">${o}</svg>`;
+  }
+
+  window.Fig = { scene, figure, P, fr, mirror, hang, quad, wgs, cossackL, STD, WARN };
 })();

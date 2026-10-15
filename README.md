@@ -15,6 +15,7 @@ App web installabile su iPhone per il judo: teoria, allenamenti, programmi di ci
 | `cinture.js` | programmi per cintura, stato («in cantiere» / «definito»), cintura attuale |
 | `lezione.js` | movimenti visti a lezione (si possono anche aggiungere dall'app, sul telefono) |
 | `teoria.js` | pagine di teoria |
+| `tecniche.js` | schede tecnica passo per passo (testi, pose dei disegni, video) |
 | `glossario.js` | termini e significati |
 | `dojo.js` | orari, palestra, eventi |
 | `content.js`, `exercises.js` | programma post-LASIK e esercizi |

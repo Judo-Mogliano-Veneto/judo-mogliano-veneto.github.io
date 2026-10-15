@@ -60,6 +60,7 @@
         { href: "#/allenamenti", label: "Allenamenti", text: pr.lasik ? "Programma post-LASIK, movimenti in classe, diario" : "Movimenti fatti in classe e diario" },
         { href: "#/teoria", label: "Teoria", text: "Storia, principi, Gokyo, kata, regole di gara" },
         { href: me ? `#/cinture/${me.id}` : "#/cinture", label: me ? `Cintura ${me.nome.toLowerCase()}` : "Cinture", text: `Programmi per cintura (${B.anno}): in cantiere` },
+        { href: "#/tecniche", label: "Tecniche", text: "Schede passo per passo con disegni e video" },
         { href: "#/glossario", label: "Glossario", text: "Il significato dei termini giapponesi" },
         { href: "#/dojo", label: "Dojo", text: "Orari, palestra e appuntamenti" }
       ])}`;
@@ -232,6 +233,59 @@
     app.querySelectorAll("[data-modo]").forEach(t => t.addEventListener("click", () => { store.set("modo:" + id, t.dataset.modo); cintura(id); wire(app); }));
   }
 
+
+  /* ---------- Tecniche (schede passo per passo) ---------- */
+  const TE = window.TECNICHE;
+  const CATALOGO = [["Proiezioni · 1° kyo", "Gokyo · 1° kyo"], ["Proiezioni · 2° kyo", "Gokyo · 2° kyo"], ["Proiezioni · 3° kyo", "Gokyo · 3° kyo"], ["Proiezioni · 4° kyo", "Gokyo · 4° kyo"], ["Proiezioni · 5° kyo", "Gokyo · 5° kyo"], ["Immobilizzazioni", "Immobilizzazioni"], ["Strangolamenti", "Strangolamenti"], ["Leve", "Leve articolari"]];
+  const guidaDi = g => TE.find(t => norm(t.nome) === norm(g.t));
+  function tecniche() {
+    const voci = G.filter(g => CATALOGO.some(c => c[0] === g.cat) && !/^(Seoi nage|Morote)/.test(g.t));
+    const pronte = voci.filter(guidaDi).length;
+    app.innerHTML = head("Tecniche", "Tecniche passo per passo", `Ogni scheda ha presa, passi, errori comuni, esercizi e video. Sono pronte **${pronte}** schede su ${voci.length}: le altre arrivano a gruppi. Il disegno è schematico: per le prese precise guarda il video e chiedi al maestro.`) + `
+      <div class="search"><input id="tq" type="search" placeholder="Cerca una tecnica" autocomplete="off" aria-label="Cerca una tecnica"></div>
+      <div id="cat" class="stack"></div>`;
+    const draw = () => {
+      const q = norm(app.querySelector("#tq").value);
+      app.querySelector("#cat").innerHTML = CATALOGO.map(([cat, titolo]) => {
+        const list = voci.filter(g => g.cat === cat && (!q || norm(g.t).includes(q)));
+        if (!list.length) return "";
+        const ok = list.filter(guidaDi).length;
+        return `<details class="catsec" ${q || ok ? "open" : ""}><summary>${esc(titolo)} <em>${ok}/${list.length}</em></summary><div class="catlist">${list.map(g => {
+          const t = guidaDi(g);
+          return t ? `<a class="tcard" href="#/tecniche/${esc(t.id)}"><b>${esc(g.t)}</b><span>${esc(g.jp || "")}</span><em>scheda pronta</em></a>` : `<button type="button" class="tcard soon chip-open" data-term="${esc(norm(g.t))}"><b>${esc(g.t)}</b><span>${esc(g.jp || "")}</span><em>in arrivo</em></button>`;
+        }).join("")}</div></details>`;
+      }).join("");
+      app.querySelectorAll(".chip-open").forEach(b => b.addEventListener("click", () => window.R.sheet.open(G.find(g => norm(g.t) === b.dataset.term))));
+    };
+    app.querySelector("#tq").addEventListener("input", draw);
+    draw();
+  }
+  const ul = items => `<div class="card"><ul>${items.map(i => `<li>${rich(i)}</li>`).join("")}</ul></div>`;
+  function tecnica(id) {
+    const t = TE.find(x => x.id === id);
+    if (!t) return notFound();
+    const g = G.find(x => norm(x.t) === norm(t.nome));
+    const steps = t.passi.map((p, i) => {
+      let fig = "";
+      if (p.tori) { try { fig = window.Fig.scene(p); } catch (e) { console.warn(t.nome, e); } }
+      return `<article class="card step">${fig ? `<div class="fig">${fig}</div>` : ""}<h3><span class="num">${i + 1}</span>${esc(p.titolo)}</h3><p>${rich(p.testo)}</p></article>`;
+    }).join("");
+    const video = t.video.map(v => `<a class="tile" href="https://www.youtube.com/results?search_query=${encodeURIComponent(v.q)}" target="_blank" rel="noopener noreferrer"><b>${esc(v.label)}</b><span>Cerca su YouTube ↗</span></a>`).join("");
+    app.innerHTML = head(`${t.gruppo}${t.kyo ? " · " + t.kyo : ""}`, t.nome, `${g && g.jp ? g.jp + " · " : ""}${t.sign}`, ["#/tecniche", "Tecniche"]) + `
+      <div class="stack">
+        <label class="know"><input type="checkbox" data-key="sa:${esc(t.id)}"> La so fare</label>
+        <div class="card"><b>Quando si usa</b><p>${rich(t.quando)}</p><b>Presa</b><p>${rich(t.presa)}</p></div>
+        <h3 class="sub">I passi</h3><div class="steps-grid">${steps}</div>
+        ${t.nota ? block({ type: "callout", tone: "info", title: "Disegno", text: t.nota }) : block({ type: "callout", tone: "info", title: "Disegno schematico", text: "Tori è in blu, uke in bianco, visti di lato. Servono a ricordare la sequenza: le prese e gli angoli precisi si vedono nel video." })}
+        <h3 class="sub">Errori comuni</h3>${ul(t.errori)}
+        <h3 class="sub">Come allenarla</h3>${ul(t.uchikomi)}
+        <h3 class="sub">Collegamenti</h3>${ul(t.collegamenti)}
+        ${block({ type: "callout", tone: "warn", title: "Sicurezza", text: t.sicurezza })}
+        <h3 class="sub">Video</h3><div class="menu">${video}</div>
+        <p class="small">Scheda versione 1: scritta dai programmi e dalla tradizione del judo, da confrontare con ciò che spiega il maestro.</p>
+      </div>`;
+  }
+
   /* ---------- Glossario ---------- */
   function glossario() {
     const cats = [...new Set(G.map(g => g.cat))];
@@ -259,7 +313,7 @@
   function notFound() { app.innerHTML = head("", "Pagina non trovata", "") + `<p><a href="#/">Torna alla home</a></p>`; }
 
   /* ---------- Router ---------- */
-  const TABS = [["#/", "Home", "home"], ["#/allenamenti", "Allenamenti", "allenamenti"], ["#/teoria", "Teoria", "teoria"], ["#/cinture", "Cinture", "cinture"], ["#/glossario", "Glossario", "glossario"]];
+  const TABS = [["#/", "Home", "home"], ["#/allenamenti", "Allenamenti", "allenamenti"], ["#/teoria", "Teoria", "teoria"], ["#/tecniche", "Tecniche", "tecniche"], ["#/cinture", "Cinture", "cinture"]];
   const bar = document.createElement("nav");
   bar.className = "tabbar"; bar.setAttribute("aria-label", "Menu principale");
   bar.innerHTML = TABS.map(t => `<a href="${t[0]}" data-tab="${t[2]}">${t[1]}</a>`).join("");
@@ -274,6 +328,7 @@
     else if (a === "teoria") b ? teoriaPage(b) : teoria();
     else if (a === "cinture") b ? cintura(b) : cinture();
     else if (a === "glossario") glossario();
+    else if (a === "tecniche") b ? tecnica(b) : tecniche();
     else if (a === "dojo") dojo();
     else if (a === "profilo") profiloPage();
     else if (a === "info") infoPage();
