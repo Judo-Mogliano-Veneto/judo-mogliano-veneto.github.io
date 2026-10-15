@@ -105,12 +105,13 @@
   const LIVELLI = [["1", "Base", "Le cose fondamentali, per tutti"], ["2", "Medio", "Cintura gialla e arancio"], ["3", "Esperto", "Tutto, anche le cose difficili"]];
   const livDefault = () => { try { const c = (JSON.parse(store.get("profilo")) || {}).cintura; return ["", "bianca"].includes(c || "") ? 1 : ["gialla", "arancione"].includes(c) ? 2 : 3; } catch (e) { return 1; } };
   const getLiv = () => { const v = parseInt(store.get("quiz-livello"), 10); return v >= 1 && v <= 3 ? v : livDefault(); };
+  const nome = () => { try { const n = (JSON.parse(store.get("profilo")) || {}).nome; return n ? n + ", " : ""; } catch (e) { return ""; } };
   const best = (id, liv) => parseInt(store.get(`quiz-${id}-${liv}`), 10) || 0;
 
   function start(el) {
     const menu = () => {
       const liv = getLiv();
-      el.innerHTML = `<div class="quiz"><p class="lead">10 domande a risposta multipla. Tocca la risposta che pensi giusta: ti dico subito se hai indovinato e perché. Il punteggio resta solo sul tuo telefono.</p>
+      el.innerHTML = `<div class="quiz"><p class="lead">${esc(nome() ? nome() .replace(/, $/, "") + ", pronto/a" : "Pronto")}? 10 domande a risposta multipla. Tocca la risposta che pensi giusta: ti dico subito se hai indovinato e perché. Il punteggio resta solo sul tuo telefono.</p>
         <div class="seg quiz-liv" role="group" aria-label="Livello">${LIVELLI.map(l => `<button type="button" data-l="${l[0]}" class="${+l[0] === liv ? "on" : ""}" aria-pressed="${+l[0] === liv}">${l[1]}</button>`).join("")}</div>
         <p class="small">${esc(LIVELLI[liv - 1][2])}</p>
         <div class="menu">${MODI.map(m => `<button type="button" class="tile quiz-mode" data-m="${m.id}"><b>${m.ico} ${esc(m.nome)}</b><span>${esc(m.txt)}</span><span class="best">Miglior punteggio: ${best(m.id, liv)}/${ROUND}</span></button>`).join("")}</div></div>`;
@@ -144,7 +145,7 @@
       const fine = () => {
         const nuovo = punti > best(id, liv); if (nuovo) store.set(`quiz-${id}-${liv}`, String(punti));
         const frase = punti === dom.length ? "Perfetto! Sei una cintura nera del quiz." : punti >= dom.length * 0.7 ? "Bravissimo, ci sei quasi!" : punti >= dom.length * 0.4 ? "Buon inizio: rifallo e migliorerai." : "Si impara giocando: riprova, le parole diventano subito familiari.";
-        el.innerHTML = `<div class="quiz quiz-end"><div class="quiz-score">${punti}<small>/${dom.length}</small></div><h2>${esc(frase)}</h2>${nuovo ? `<p class="ok"><b>Nuovo record! 🏆</b></p>` : `<p class="small">Il tuo record: ${best(id, liv)}/${ROUND}</p>`}
+        el.innerHTML = `<div class="quiz quiz-end"><div class="quiz-score">${punti}<small>/${dom.length}</small></div><h2>${esc(nome() + frase)}</h2>${nuovo ? `<p class="ok"><b>Nuovo record! 🏆</b></p>` : `<p class="small">Il tuo record: ${best(id, liv)}/${ROUND}</p>`}
           <div class="row"><button type="button" class="btn" data-again>Rigioca</button><button type="button" class="btn ghost" data-menu>Cambia gioco</button></div></div>`;
         el.querySelector("[data-again]").addEventListener("click", () => gioca(id));
         el.querySelector("[data-menu]").addEventListener("click", menu);

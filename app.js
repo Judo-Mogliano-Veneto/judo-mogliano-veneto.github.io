@@ -19,7 +19,7 @@
   const beltDot = b => `<i class="dot${b.bordo ? " edge" : ""}" style="background:${b.colore}"></i>`;
 
   /* ---------- Profilo (resta sul telefono, nessun account) ---------- */
-  const profilo = () => ({ cintura: "", corso: "judo", lasik: false, ...json("profilo", {}) });
+  const profilo = () => ({ nome: "", cintura: "", corso: "judo", lasik: false, ...json("profilo", {}) });
   const saveProfilo = p => store.set("profilo", JSON.stringify(p));
   const nextBelt = id => { const i = B.lista.findIndex(b => b.id === id); return i >= 0 ? B.lista[i + 1] : null; };
 
@@ -55,7 +55,7 @@
     const beltCard = me
       ? `<div class="belt-me"><span>La tua cintura</span><b>${beltDot(me)} ${esc(me.nome)}</b>${nx ? `<a href="#/cinture/${esc(nx.id)}">Prossima: ${esc(nx.nome)} →</a>` : ""}<a href="#/profilo">Cambia profilo</a></div>`
       : `<a class="belt-me setup" href="#/profilo"><span>Profilo</span><b>Scegli la tua cintura</b><small>Così la home e i menu si adattano a te. Resta solo su questo telefono.</small></a>`;
-    app.innerHTML = `<img class="logo-home" src="icons/logo.png" alt="Logo Polisportiva Mogliano Veneto" width="84" height="111">` + head("Judo · Ju Jitsu", "Judo Mogliano Veneto", "Teoria, allenamenti e programmi delle cinture in un posto solo.") + `
+    app.innerHTML = `<img class="logo-home" src="icons/logo.png" alt="Logo Polisportiva Mogliano Veneto" width="84" height="111">` + head(pr.nome ? "Ciao " + pr.nome + "!" : "Judo · Ju Jitsu", "Judo Mogliano Veneto", "Teoria, allenamenti e programmi delle cinture in un posto solo.") + `
       <div class="search"><input id="q" type="search" placeholder="Cerca una tecnica o un termine" autocomplete="off" aria-label="Cerca"><div id="res"></div></div>
       ${cards}${beltCard}
       ${tiles([
@@ -87,8 +87,9 @@
 
   function profiloPage() {
     const pr = profilo();
-    app.innerHTML = head("Profilo", "Il tuo profilo", "Scegli cintura e corso: la home e i menu si adattano. Non serve un account: le scelte restano su questo telefono.", ["#/", "Home"]) + `
+    app.innerHTML = head("Profilo", "Il tuo profilo", "Scrivi il tuo nome e scegli cintura e corso: la home e i menu si adattano. Non serve un account: tutto resta solo su questo dispositivo (se usi un altro telefono o computer va rifatto).", ["#/", "Home"]) + `
       <form class="form" id="f">
+        <label>Il tuo nome<input type="text" name="nome" maxlength="30" autocomplete="given-name" placeholder="Come ti chiami?" value="${esc(pr.nome || "")}"></label>
         <label>Cintura attuale<select name="cintura"><option value="">Non scelta</option>${B.lista.map(b => `<option value="${esc(b.id)}"${b.id === pr.cintura ? " selected" : ""}>${esc(b.nome)}</option>`).join("")}</select></label>
         <label>Corso<select name="corso">${D.orari.filter(o => o.id).map(o => `<option value="${esc(o.id)}"${o.id === pr.corso ? " selected" : ""}>${esc(o.corso)}</option>`).join("")}</select></label>
         <label class="check"><input type="checkbox" name="lasik"${pr.lasik ? " checked" : ""}> Mostra il programma post-LASIK (scheda personale di Marco)</label>
@@ -96,7 +97,7 @@
       </form>`;
     app.querySelector("#f").addEventListener("submit", e => {
       e.preventDefault();
-      const f = e.target; saveProfilo({ cintura: f.cintura.value, corso: f.corso.value, lasik: f.lasik.checked });
+      const f = e.target; saveProfilo({ nome: f.nome.value.trim().slice(0, 30), cintura: f.cintura.value, corso: f.corso.value, lasik: f.lasik.checked });
       app.querySelector("#ok").textContent = "Salvato."; setTimeout(() => { location.hash = "#/"; }, 500);
     });
   }
