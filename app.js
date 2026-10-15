@@ -340,6 +340,30 @@
   bar.innerHTML = TABS.map(t => `<a href="${t[0]}" data-tab="${t[2]}">${t[1]}</a>`).join("");
   document.body.appendChild(bar);
 
+  /* ---------- Mini glossario: le parole giapponesi presenti nella pagina aperta ---------- */
+  const words = s => " " + String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z]+/g, " ").trim() + " ";
+  const GW = (window.GLOSSARIO || []).flatMap(g => [g.t, ...(g.alias || [])].map(n => ({ g, w: words(n) }))).filter(x => x.w.trim().length >= 3);
+  const breve = d => { const m = String(d).match(/^.+?[.:;](\s|$)/); return (m ? m[0] : d).replace(/[.:;]\s*$/, ""); };
+  function miniGloss(page) {
+    if (page === "glossario" || page === "info" || page === "profilo") return;
+    const hdr = app.querySelector("header");
+    if (!hdr) return;
+    const txt = words(app.innerText || app.textContent), title = words(hdr.querySelector("h1").textContent);
+    const found = new Map();
+    GW.forEach(({ g, w }) => {
+      if (title === w) return;
+      const i = txt.indexOf(w);
+      if (i >= 0 && (!found.has(g) || found.get(g) > i)) found.set(g, i);
+    });
+    if (!found.size) return;
+    const list = [...found].sort((a, b) => a[1] - b[1]).map(x => x[0]);
+    const k = "mini-gloss";
+    hdr.insertAdjacentHTML("afterend", `<details class="mini-gloss"${store.get(k) === "1" ? " open" : ""}><summary>Parole giapponesi in questa pagina <span>${list.length}</span></summary>
+      <dl>${list.map(g => `<div><dt><button type="button" class="chip has" data-term="${esc(norm(g.t))}">${esc(g.t)}</button></dt><dd>${rich(breve(g.d))}</dd></div>`).join("")}</dl>
+      <p class="small">Tocca una parola per la spiegazione completa, o apri il <a href="#/glossario">glossario</a>.</p></details>`);
+    hdr.nextElementSibling.addEventListener("toggle", e => store.set(k, e.target.open ? "1" : "0"));
+  }
+
   function route() {
     const parts = (location.hash.replace(/^#\/?/, "") || "").split("/").filter(Boolean);
     const [a, b] = parts;
@@ -354,6 +378,7 @@
     else if (a === "profilo") profiloPage();
     else if (a === "info") infoPage();
     else notFound();
+    miniGloss(a || "home");
     app.insertAdjacentHTML("beforeend", `<footer class="foot">Ideata e realizzata da ${esc(window.INFO.autore)} · <a href="#/info">Crediti e note legali</a></footer>`);
     wire(app);
     bar.querySelectorAll("a").forEach(l => l.classList.toggle("on", (a || "home") === l.dataset.tab));

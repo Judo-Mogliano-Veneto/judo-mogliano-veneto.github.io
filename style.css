@@ -243,3 +243,12 @@ button.link { font: inherit; background: none; border: 0; color: var(--muted); t
 .plan svg { width: 100%; max-height: 300px; }
 .steps .plan-leg li { display: flex; background: none; border: 0; padding: 0; border-radius: 0; color: var(--ink); }
 .steps .plan-leg li::before { content: counter(l); grid-row: auto; width: 16px; height: 16px; font-size: .68rem; font-family: inherit; background: var(--c); color: #fff; }
+
+.mini-gloss { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; margin: 0 0 14px; }
+.mini-gloss summary { cursor: pointer; padding: 10px 12px; font-weight: 700; font-size: .92rem; display: flex; align-items: center; gap: 8px; }
+.mini-gloss summary span { background: var(--accent); color: var(--surface); border-radius: 999px; font-size: .72rem; padding: 1px 8px; }
+.mini-gloss dl { margin: 0; padding: 0 12px; max-height: 50vh; overflow-y: auto; }
+.mini-gloss dl div { display: grid; grid-template-columns: minmax(96px, 38%) 1fr; gap: 8px; align-items: baseline; padding: 6px 0; border-top: 1px solid var(--line); }
+.mini-gloss dt { margin: 0; } .mini-gloss dt .chip { white-space: normal; text-align: left; }
+.mini-gloss dd { margin: 0; font-size: .84rem; color: var(--muted); }
+.mini-gloss .small { padding: 0 12px 10px; margin: 6px 0 0; }
