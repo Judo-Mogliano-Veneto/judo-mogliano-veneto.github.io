@@ -1,4 +1,4 @@
-# Judo Mogliano
+# Judo Mogliano Veneto
 
 App web installabile su iPhone per il judo: teoria, allenamenti, programmi di cintura e glossario. Si apre a schermo intero e funziona anche senza rete.
 

@@ -26,5 +26,5 @@ window.INFO = {
   licenza: "MIT",
   anno: 2026,
   versione: "2026-10-15",
-  repo: "https://github.com/Maeco96/judo-Mogliano"
+  repo: "https://github.com/Judo-Mogliano-Veneto/judo-mogliano-veneto.github.io"
 };
