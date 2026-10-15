@@ -345,6 +345,8 @@
   const GW = (window.GLOSSARIO || []).flatMap(g => [g.t, ...(g.alias || [])].map(n => ({ g, w: words(n) }))).filter(x => x.w.trim().length >= 3);
   const breve = d => { const m = String(d).match(/^.+?[.:;](\s|$)/); return (m ? m[0] : d).replace(/[.:;]\s*$/, ""); };
   function miniGloss(page) {
+    document.querySelectorAll(".gpanel, .gfab").forEach(x => x.remove());
+    document.body.classList.remove("has-gp");
     if (page === "glossario" || page === "info" || page === "profilo") return;
     const hdr = app.querySelector("header");
     if (!hdr) return;
@@ -357,11 +359,20 @@
     });
     if (!found.size) return;
     const list = [...found].sort((a, b) => a[1] - b[1]).map(x => x[0]);
-    const k = "mini-gloss";
-    hdr.insertAdjacentHTML("afterend", `<details class="mini-gloss"${store.get(k) === "1" ? " open" : ""}><summary>Parole giapponesi in questa pagina <span>${list.length}</span></summary>
+    // pannello sempre a portata: bottone fisso sul telefono, colonna a lato su schermi larghi
+    const el = document.createElement("aside");
+    el.className = "gpanel"; el.setAttribute("aria-label", "Parole giapponesi in questa pagina");
+    el.innerHTML = `<div class="gp-head"><b>Parole in questa pagina</b><button type="button" class="x" aria-label="Chiudi">×</button></div>
       <dl>${list.map(g => `<div><dt><button type="button" class="chip has" data-term="${esc(norm(g.t))}">${esc(g.t)}</button></dt><dd>${rich(breve(g.d))}</dd></div>`).join("")}</dl>
-      <p class="small">Tocca una parola per la spiegazione completa, o apri il <a href="#/glossario">glossario</a>.</p></details>`);
-    hdr.nextElementSibling.addEventListener("toggle", e => store.set(k, e.target.open ? "1" : "0"));
+      <p class="small">Tocca una parola per la spiegazione completa · <a href="#/glossario">Glossario</a></p>`;
+    const fab = document.createElement("button");
+    fab.type = "button"; fab.className = "gfab"; fab.setAttribute("aria-expanded", "false");
+    fab.innerHTML = `<span lang="ja">語</span> Parole <i>${list.length}</i>`;
+    const toggle = on => { el.classList.toggle("on", on); fab.setAttribute("aria-expanded", on); };
+    fab.addEventListener("click", () => toggle(!el.classList.contains("on")));
+    el.querySelector(".x").addEventListener("click", () => toggle(false));
+    document.body.append(el, fab);
+    document.body.classList.add("has-gp");
   }
 
   function route() {
