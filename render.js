@@ -16,13 +16,16 @@
   GLOSS.forEach(g => { index[norm(g.t)] = g; (g.alias || []).forEach(a => { index[norm(a)] = g; }); });
   const lookup = name => index[norm(name)] || index[norm(String(name).replace(/\(.*\)/, ""))];
 
+  // nome toccabile se è nel glossario, altrimenti testo semplice
   const chip = name => {
     const g = lookup(name);
     return g ? `<button type="button" class="chip has" data-term="${esc(norm(g.t))}">${esc(name)}</button>` : `<span class="chip">${esc(name)}</span>`;
   };
 
+  // tabella semplice: head = intestazioni, rows = righe (array di celle)
   const table = (head, rows) => `<div class="tbl"><table><thead><tr>${head.map(h => `<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${rows.map(r => `<tr>${r.map((c, i) => `<td${i === 0 && /^\d+$/.test(c) ? ' class="n"' : ""}>${rich(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
 
+  // scheda di un esercizio (exercises.js) con il disegno generato da figures.js
   const card = (ex, i) => {
     let fig = "";
     try { fig = window.Fig.figure(ex); } catch (e) { console.warn(ex.name, e); }
@@ -35,6 +38,7 @@
   const tree = items => `<ul class="tree">${items.map(i => `<li>${i.href ? `<a href="${esc(i.href)}">${esc(i.label)}</a>` : `<b>${esc(i.label)}</b>`}${i.text ? ` <span>${rich(i.text)}</span>` : ""}${i.children ? tree(i.children) : ""}</li>`).join("")}</ul>`;
 
   let uid = 0;
+  // trasforma un blocco dei file dati ({ type: "text", ... }) in HTML. Per un nuovo tipo di blocco aggiungi qui un case
   const block = b => {
     switch (b.type) {
       case "text": return `<p>${rich(b.text)}</p>`;

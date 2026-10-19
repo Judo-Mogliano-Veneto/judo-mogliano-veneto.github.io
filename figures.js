@@ -29,6 +29,8 @@
   const P_UARM = [[0, 9.5], [.5, 9], [1, 7.2]];
   const P_FARM = [[0, 7.2], [.3, 7.6], [1, 5]];
 
+  // cinematica inversa a due segmenti: dato l'attacco a (anca/spalla), il punto finale t (piede/polso) e le lunghezze,
+  // trova il ginocchio/gomito; hint sceglie da che parte piegare. Se t è troppo lontano scrive un avviso in WARN
   function ik(a, t, l1, l2, hint, tag) {
     const d = sub(t, a), dist = len(d);
     const max = l1 + l2 - 0.2, min = Math.abs(l1 - l2) + 0.5;
@@ -45,6 +47,7 @@
     return { j: s1 >= s2 ? j1 : j2, e };
   }
 
+  // da una posa (parametri di P/fr in exercises.js) calcola tutti i punti del corpo e le forme da disegnare
   function solve(p, tag) {
     const front = p.view === "front" || p.view === "top";
     let psi = p.ta ?? 90;
@@ -265,6 +268,7 @@
     return o;
   }
 
+  // stessa posa vista dall'altro lato (destra e sinistra scambiate)
   function mirror(p) {
     const q = JSON.parse(JSON.stringify(p));
     const mp = a => a && [-a[0], a[1]];
@@ -282,6 +286,7 @@
     return q;
   }
 
+  // SVG con tutte le pose di un esercizio affiancate (es. inizio e fine), alla stessa scala
   function figure(ex) {
     const frames = ex.f.map((p, i) => solve(Object.assign({ view: ex.view }, p), ex.name + " #" + i));
     let minx = 1e9, maxx = -1e9, miny = 1e9, maxy = -1e9;
@@ -307,6 +312,7 @@
   }
 
   // ---------- poses ----------
+  // posa di base in piedi di profilo (STD/P) e di fronte (fr); le altre sono pose pronte usate in exercises.js
   const STD = { sh: [0, 146], ta: 90, f1: { p: [3, 9] }, f2: { p: [-4, 9] }, a1: [-95, -80], a2: [-92, -84] };
   const P = o => Object.assign({}, STD, o);
   const fr = o => Object.assign({ view: "front", sh: [0, 146], ta: 90, f1: { p: [10, 9], h: [1, 0] }, f2: { p: [-10, 9], h: [-1, 0] }, a1: [-82, -82], a2: [-98, -98] }, o);
