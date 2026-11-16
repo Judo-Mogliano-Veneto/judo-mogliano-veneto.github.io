@@ -26,6 +26,7 @@
     if (["Dojo", "Cadute", "Numeri", "Spostamenti", "Posizioni e prese"].includes(g.cat)) return g.lv || 1;
     return 3;
   };
+  // domande «cosa significa?» sulle voci del glossario scelte da filtro, con risposte sbagliate prese soprattutto dalla stessa categoria
   function domandeSignificato(filtro) {
     const pool = (window.GLOSSARIO || []).filter(g => g.d && filtro(g));
     return pool.map(g => {
@@ -38,6 +39,7 @@
     }).filter(Boolean);
   }
 
+  // domande su gruppo (ashi waza, te waza...) e kyo delle tecniche di tecniche.js
   function domandeGruppi() {
     const T = (window.TECNICHE || []).filter(t => !t.vietata && t.gruppo && t.kyo);
     const gruppi = [...new Set(T.map(t => t.gruppo))], kyo = [...new Set(T.map(t => t.kyo))].sort();
@@ -91,6 +93,7 @@
   const livTrab = q => { const k = Object.keys(LIV_TRAB).find(k => q.startsWith(k)); return k ? LIV_TRAB[k] : 3; };
   const domandeTrabocchetti = () => TRABOCCHETTI.map(([q, o, spiega]) => ({ q, giusta: o[0], opz: shuffle(o), spiega, lv: livTrab(q) }));
 
+  // prepara un giro di ROUND domande per il modo id e il livello liv (1-3)
   const costruisci = (id, liv) => {
     const f = a => a.filter(d => (d.lv || 3) <= liv);
     const termini = () => domandeSignificato(g => !TECH.test(g.cat) && !["Ju Jitsu", "Classificazione", "Arbitraggio"].includes(g.cat));
@@ -108,6 +111,7 @@
   const nome = () => { try { const n = (JSON.parse(store.get("profilo")) || {}).nome; return n ? n + ", " : ""; } catch (e) { return ""; } };
   const best = (id, liv) => parseInt(store.get(`quiz-${id}-${liv}`), 10) || 0;
 
+  // disegna il quiz dentro el: menu dei modi, domande una alla volta, punteggio finale
   function start(el) {
     const menu = () => {
       const liv = getLiv();

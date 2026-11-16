@@ -16,6 +16,7 @@
   };
   const ARROW = { squilibrio: "#e8742a", caduta: "#e8742a", falciata: "#c8372d", piede: "var(--muted)" };
 
+  // SVG di un passo visto dall'alto: { tori, uke, prese, frecce } nel formato descritto sopra
   function plan(step, opts) {
     const pts = [];
     const P = (q) => { pts.push(q); return q; };

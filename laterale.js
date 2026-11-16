@@ -10,6 +10,7 @@ const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2], len = a => Math.h
 const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
 const rot = (a, axis, ang) => { const k = nrm(axis), c = Math.cos(ang * D), s = Math.sin(ang * D); return add(add(mul(a, c), mul(cross(k, a), s)), mul(k, dot(k, a) * (1 - c))); };
 const S = { thigh: 44, shin: 44, uarm: 29, farm: 28, torso: 50, hip: 10, sh: 19, head: 11 };
+// cinematica inversa in 3D: da anca/spalla A e piede/mano F trova ginocchio/gomito; hint = direzione in cui piegare
 function ik(A, F, a, b, hint) {
   let d = sub(F, A), L = len(d); const u = nrm(d);
   if (L > a + b - .5) { F = add(A, mul(u, a + b - .5)); L = a + b - .5; }
@@ -38,6 +39,7 @@ function body(p) {
 }
 const COL = { tori: { gi: [47, 102, 196], line: "#173569" }, uke: { gi: [244, 244, 238], line: "#3d4752" } };
 const SKIN = [224, 187, 152];
+// disegna tori e uke visti dalla camera cam ({ yaw, pitch } in gradi), dal più lontano al più vicino
 function render(scene, cam) {
   const yaw = cam.yaw, pitch = cam.pitch;
   const pr = q => { let a = rot(q, [0, 1, 0], yaw); a = rot(a, [1, 0, 0], pitch); return a; };

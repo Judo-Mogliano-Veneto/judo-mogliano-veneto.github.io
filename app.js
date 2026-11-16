@@ -24,7 +24,9 @@
   const nextBelt = id => { const i = B.lista.findIndex(b => b.id === id); return i >= 0 ? B.lista[i + 1] : null; };
 
   /* ---------- Home ---------- */
+  // date del programma post-LASIK (scheda personale, si vede solo se attivata nel profilo)
   const START = new Date(2026, 9, 12), END = new Date(2026, 10, 18);
+  // prossimo giorno di lezione del corso scelto nel profilo (guarda i giorni in dojo.js, fino a una settimana avanti)
   function nextLesson(corso) {
     const c = D.orari.find(o => o.id === corso) || D.orari[0];
     const now = new Date(); now.setHours(0, 0, 0, 0);
@@ -34,13 +36,16 @@
     }
     return null;
   }
+  // «Oggi», «Domani» oppure il nome del giorno
   const whenLabel = ns => ns.i === 0 ? "Oggi" : ns.i === 1 ? "Domani" : GIORNI[ns.d.getDay()][0].toUpperCase() + GIORNI[ns.d.getDay()].slice(1);
+  // settimana, carico e seduta (A il lunedì, B il mercoledì) del programma post-LASIK per la data d; null fuori dal periodo
   function programmaDel(d) {
     if (d < START || d > END) return null;
     const week = Math.floor((d - START) / 864e5 / 7) + 1;
     const prog = C.sections.find(s => s.id === "progressione").blocks.find(b => b.type === "progress");
     return { week, load: prog.rows[week - 1].load, seduta: d.getDay() === 1 ? "A" : "B" };
   }
+  // pagina iniziale: saluto, prossima lezione, prossima cintura e menu
   function home() {
     const pr = profilo();
     const me = B.lista.find(b => b.id === pr.cintura), nx = me && nextBelt(me.id);
@@ -80,11 +85,13 @@
     });
   }
 
+  // il quiz vero sta in quiz.js (window.Quiz)
   function quizPage() {
     app.innerHTML = head("Gioca", "Quiz", "", ["#/", "Home"]) + `<div id="quiz"></div>`;
     window.Quiz.start(app.querySelector("#quiz"));
   }
 
+  // nome, cintura e corso: si salvano solo sul telefono (localStorage), nessun server
   function profiloPage() {
     const pr = profilo();
     app.innerHTML = head("Profilo", "Il tuo profilo", "Scrivi il tuo nome e scegli cintura e corso: la home e i menu si adattano. Non serve un account: tutto resta solo su questo dispositivo (se usi un altro telefono o computer va rifatto).", ["#/", "Home"]) + `
@@ -102,6 +109,7 @@
     });
   }
 
+  // crediti, licenza e note legali (dati in window.INFO, dojo.js)
   function infoPage() {
     const I = window.INFO;
     app.innerHTML = head("Informazioni", "Crediti e note legali", "", ["#/", "Home"]) + `<div class="stack">
@@ -122,6 +130,7 @@
   }
 
   /* ---------- Allenamenti ---------- */
+  // menu Allenamenti: la voce post-LASIK compare solo se attivata nel profilo
   function allenamenti() {
     const las = profilo().lasik;
     app.innerHTML = head("Allenamenti", "Allenamenti", las ? "Il programma di forza e stretching, i movimenti visti a lezione e il diario delle sedute." : "I movimenti visti a lezione e il diario delle sedute.") + tiles([
@@ -131,6 +140,7 @@
     ]);
   }
 
+  // programma post-LASIK: testi da content.js, esercizi e disegni da exercises.js e figures.js
   function lasik() {
     app.innerHTML = head(C.eyebrow, C.title, C.lead, ["#/allenamenti", "Allenamenti"]) + `<div class="legend">${C.legend.map(l => `<span>${l.color ? `<i style="background:${l.color}"></i>` : ""}${esc(l.text)}</span>`).join("")}</div>
       <nav class="subnav" aria-label="Sezioni"><ul>${C.sections.map(s => `<li><button type="button" data-go="${esc(s.id)}">${esc(s.nav)}</button></li>`).join("")}</ul></nav>
@@ -141,6 +151,7 @@
   // movimenti in classe: quelli nel file + quelli aggiunti dal telefono
   const allClasse = () => [...L.voci.map(v => ({ ...v, fissa: true })), ...json("classe", [])].sort((a, b) => (b.data || "").localeCompare(a.data || ""));
 
+  // movimenti visti a lezione: elenco con ricerca, aggiunta dal telefono, esportazione
   function classe() {
     const draw = () => {
       const cat = app.querySelector("#fcat").value, s = norm(app.querySelector("#fq").value);
@@ -179,6 +190,7 @@
     draw();
   }
 
+  // diario delle sedute, salvato sul telefono
   function diario() {
     const draw = () => {
       const list = json("diario", []).sort((a, b) => b.data.localeCompare(a.data));
@@ -203,6 +215,7 @@
   }
 
   /* ---------- Teoria ---------- */
+  // elenco delle pagine di teoria (teoria.js); teoriaPage ne mostra una
   function teoria() {
     app.innerHTML = head("Teoria", "Teoria", "Da leggere e da ripassare. Tocca i nomi delle tecniche per vederne il significato.") + tiles(T.map(p => ({ href: `#/teoria/${p.id}`, label: p.title, text: p.text })));
   }
@@ -215,6 +228,7 @@
   }
 
   /* ---------- Cinture ---------- */
+  // elenco cinture (cinture.js); cintura(id) mostra il programma di una
   function cinture() {
     const me = profilo().cintura, nxId = (nextBelt(me) || {}).id;
     app.innerHTML = head("Cinture", "Cinture", `I programmi per il ${B.anno} non sono ancora definiti: ogni cintura è **in cantiere** e si aggiorna quando il maestro li comunica. Intanto restano i programmi degli anni passati, come riferimento.`) + `
@@ -248,11 +262,14 @@
   /* ---------- Tecniche: una pagina per ogni tecnica, con video Kodokan e scheda passo per passo dove c'è ---------- */
   const TE = window.TECNICHE, V = window.VIDEO || {}, VA = window.VIDEO_ALIAS || {};
   const CATALOGO = [["Proiezioni · 1° kyo", "Gokyo · 1° kyo"], ["Proiezioni · 2° kyo", "Gokyo · 2° kyo"], ["Proiezioni · 3° kyo", "Gokyo · 3° kyo"], ["Proiezioni · 4° kyo", "Gokyo · 4° kyo"], ["Proiezioni · 5° kyo", "Gokyo · 5° kyo"], ["Immobilizzazioni", "Immobilizzazioni"], ["Strangolamenti", "Strangolamenti"], ["Leve", "Leve articolari"]];
+  // indici per trovare il video anche se il nome è scritto in modo diverso (maiuscole, trattini, «shio»/«shiho»)
   const VN = {}; Object.keys(V).forEach(k => { VN[norm(k)] = V[k]; });
   const VX = {}; Object.entries(window.VIDEO_EXTRA || {}).forEach(([k, v]) => { VX[norm(k)] = v; });
   const extraDi = name => VX[norm(name)] || VX[norm(String(name).replace(/shio/i, "shiho"))] || null;
   const videoBase = name => VN[norm(VA[name] || name)] || VN[norm(String(name).replace(/shio/i, "shiho"))] || null;
+  // scheda passo per passo (tecniche.js) che corrisponde a una voce del glossario
   const guidaDi = g => TE.find(t => norm(t.nome) === norm(g.t) || (t.alias || []).some(a => norm(a) === norm(g.t)));
+  // voci del glossario che compaiono nel catalogo tecniche
   const voci = () => G.filter(g => CATALOGO.some(c => c[0] === g.cat) && !/^(Seoi nage|Morote)/.test(g.t));
   const videoDi = name => { const x = extraDi(name); return videoBase(name) || (x && (x.id || videoBase(x.rif))) || null; };
   const videoBox = (id, name) => id ? `<div class="yt" data-yt="${esc(id)}"><button type="button" class="yt-play" aria-label="Guarda il video di ${esc(name)}"><span class="yt-ico">▶</span><b>Guarda il video del Kodokan</b><small>Si carica qui solo quando tocchi. Serve la rete.</small></button></div><p class="small"><a href="https://www.youtube.com/watch?v=${esc(id)}" target="_blank" rel="noopener noreferrer">Apri su YouTube ↗</a></p>` : `<div class="callout"><b>Video non disponibile</b><p>Il Kodokan non ha un video di questa tecnica nel suo elenco. Si può aggiungere in <code>video.js</code>.</p></div>`;
@@ -264,6 +281,7 @@
     if (!navigator.onLine) { b.querySelector("small").textContent = "Sei offline: il video si vede solo con la rete."; return; }
     box.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${encodeURIComponent(id)}?autoplay=1&rel=0&playsinline=1" title="Video del Kodokan" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
   });
+  // catalogo delle tecniche, diviso per gruppo, con ricerca
   function tecniche() {
     const all = voci(), pronte = all.filter(guidaDi).length, conVideo = all.filter(g => videoDi(g.t)).length;
     app.innerHTML = head("Tecniche", "Tecniche", `Ogni tecnica ha la sua pagina con significato e **video ufficiale del Kodokan** (${conVideo} su ${all.length}). Le schede passo per passo sono pronte per **${pronte}** tecniche e arrivano a gruppi.`) + `
@@ -304,6 +322,7 @@
     return `<div class="viste" data-v="${vista}">${sel}${leg}<ol class="steps">${t.passi.map((p, i) => `<li><b>${esc(p.titolo)}</b>${p.pianta || p.lato ? `<div class="plan">${P && p.pianta ? `<div class="v-alto">${P.plan(p.pianta, { cornice: cr })}</div>` : ""}${lati[i] ? `<div class="v-lato">${lati[i]}</div>` : ""}</div>` : ""}<span>${rich(p.testo)}</span></li>`).join("")}</ol></div>`;
   };
   const ul = items => `<div class="card"><ul>${items.map(i => `<li>${rich(i)}</li>`).join("")}</ul></div>`;
+  // pagina di una tecnica: significato (glossario), video, passi con disegni se ci sono
   function tecnica(slug) {
     const g = G.find(x => norm(x.t) === slug) || G.find(x => norm(x.t) === norm(slug));
     const t = TE.find(x => norm(x.nome) === slug || x.id === slug) || (g && guidaDi(g));
@@ -329,6 +348,7 @@
   }
 
   /* ---------- Glossario ---------- */
+  // glossario con ricerca e filtro per categoria
   function glossario() {
     const cats = [...new Set(G.map(g => g.cat))];
     app.innerHTML = head("Glossario", "Glossario", `${G.length} termini. Cerca per nome o filtra per argomento.`) + `
@@ -345,6 +365,7 @@
   }
 
   /* ---------- Dojo ---------- */
+  // orari, palestra ed eventi da dojo.js
   function dojo() {
     app.innerHTML = head("Dojo", D.nome, `Stagione ${D.stagione}`) + `<div class="stack">
       <h3 class="sub">Orari delle lezioni</h3>${block({ type: "table", head: ["Corso", "Giorni", "Orario"], rows: D.orari.map(o => [o.corso, o.giorni.map(g => GIORNI[g]).join(" e "), o.orario]) })}
@@ -355,6 +376,7 @@
   function notFound() { app.innerHTML = head("", "Pagina non trovata", "") + `<p><a href="#/">Torna alla home</a></p>`; }
 
   /* ---------- Router ---------- */
+  // barra in basso: [indirizzo, etichetta, icona]
   const TABS = [["#/", "Home", "home"], ["#/allenamenti", "Allenamenti", "allenamenti"], ["#/teoria", "Teoria", "teoria"], ["#/tecniche", "Tecniche", "tecniche"], ["#/cinture", "Cinture", "cinture"]];
   const bar = document.createElement("nav");
   bar.className = "tabbar"; bar.setAttribute("aria-label", "Menu principale");
@@ -369,6 +391,7 @@
   bar.innerHTML = TABS.map(t => `<a href="${t[0]}" data-tab="${t[2]}"><svg viewBox="0 0 24 24" aria-hidden="true">${ICO[t[2]]}</svg><span>${t[1]}</span></a>`).join("");
   document.body.appendChild(bar);
 
+  // pulsanti «Vista dall'alto» / «laterale»: la scelta resta salvata per le pagine successive
   app.addEventListener("click", e => {
     const b = e.target.closest && e.target.closest("[data-vista]");
     if (!b) return;
@@ -378,6 +401,7 @@
   });
 
   /* ---------- Mini glossario: le parole giapponesi presenti nella pagina aperta ---------- */
+  // testo normalizzato (minuscole, senza accenti) con spazi ai lati, per cercare parole intere
   const words = s => " " + String(s).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z]+/g, " ").trim() + " ";
   const GW = (window.GLOSSARIO || []).flatMap(g => [g.t, ...(g.alias || [])].map(n => ({ g, w: words(n) }))).filter(x => x.w.trim().length >= 3);
   const breve = d => { const m = String(d).match(/^.+?[.:;](\s|$)/); return (m ? m[0] : d).replace(/[.:;]\s*$/, ""); };
@@ -414,6 +438,7 @@
     document.body.classList.add("has-gp");
   }
 
+  // router: l'indirizzo dopo # decide la pagina (es. #/tecniche/osotogari). Per aggiungere una pagina, aggiungi qui il suo ramo
   function route() {
     const parts = (location.hash.replace(/^#\/?/, "") || "").split("/").filter(Boolean);
     const [a, b] = parts;
